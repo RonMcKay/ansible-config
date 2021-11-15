@@ -1,0 +1,9 @@
+---
+- name: "zsh | Install powerlevel10k theme for oh-my-zsh"
+  become: yes
+  become_user: "{{ config_user | default('poberdie') }}"
+  git:
+    repo: "https://github.com/romkatv/powerlevel10k.git"
+    dest: "/home/{{ config_user | default('poberdie') }}/.oh-my-zsh/custom/themes/powerlevel10k"
+    depth: 1
+  when: ansible_distribution in ["Debian", "Ubuntu"]

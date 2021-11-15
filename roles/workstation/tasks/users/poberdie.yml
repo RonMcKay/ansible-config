@@ -1,0 +1,15 @@
+---
+- include_vars: users/poberdie_vars.yml
+
+# Setup zsh config
+- name: poberdie | Configure zsh
+  include_tasks: config/zsh/zsh-config.yml
+  when: "shell|default('') == 'zsh'"
+
+- name: poberdie | Configure taskwarrior
+  include_tasks: config/taskwarrior-config.yml
+
+- name: poberdie | Install packages for python development
+  include_tasks: config/python-dev.yml
+
+# TODO: Add .profile/.zprofile template for WSL distros without services (syncthing)

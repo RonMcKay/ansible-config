@@ -1,0 +1,39 @@
+---
+- block:
+    - name: syncthing | Ensure gpg is installed
+      apt:
+        name: gpg
+        state: latest
+
+    - name: syncthing | Add PGP release key
+      apt_key:
+        url: https://syncthing.net/release-key.gpg
+        state: present
+
+    - name: syncthing | Add stable channel to APT sources
+      apt_repository:
+        repo: deb https://apt.syncthing.net/ syncthing stable
+        state: present
+
+    - name: syncthing | Install syncthing (APT)
+      apt:
+        name: syncthing
+        state: latest
+
+    - name: syncthing | Setup syncthing service
+      get_url:
+        url: "https://raw.githubusercontent.com/syncthing/syncthing/main/etc/linux-systemd/system/syncthing%40.service"
+        dest: "/etc/systemd/system/syncthing@.service"
+        owner: root
+        group: root
+        mode: 0644
+      register: syncthing_service
+
+    - name: syncthing | Reload daemon if syncthing service changed
+      command: 'systemctl daemon-reload'
+      when: syncthing_service.changed
+      failed_when: false
+
+  when: ansible_distribution in ["Debian", "Ubuntu"]
+  become: true
+  tags: syncthing

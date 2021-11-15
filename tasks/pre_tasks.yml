@@ -1,0 +1,24 @@
+---
+- block:
+    - include_tasks: tasks/check_for_wsl_environment.yml
+
+    - name: update repo cache (Debian, Ubuntu)
+      become: true
+      apt:
+        update_cache: yes
+      changed_when: false
+
+    - name: poberdie | Create user poberdie
+      include_tasks: tasks/create_user.yml
+      vars:
+        user_vars_file: "users/poberdie_vars.yml"
+      when: private
+
+    - name: "Check if user 'poberdie' exists"
+      getent:
+        database: passwd
+        key: poberdie
+        fail_key: false
+
+  when: ansible_distribution in ["Debian", "Ubuntu"]
+  tags: always

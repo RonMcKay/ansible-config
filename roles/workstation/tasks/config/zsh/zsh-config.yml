@@ -1,0 +1,33 @@
+---
+- block:
+    - name: "zsh | Set zsh as default shell"
+      shell: 'chsh -s $(which zsh) {{ config_user | default("poberdie") }}'
+      become: true
+      changed_when: false
+
+    # Install oh-my-zsh
+    - include_tasks: config/zsh/oh-my-zsh.yml
+  
+    # Install powerlevel10k theme and copy config
+    - include_tasks: config/zsh/powerlevel10k.yml
+
+    - name: "zsh | Copy powerlevel10k theme config"
+      tags: dotfiles
+      template:
+        src: "zsh/p10k.zsh.j2"
+        dest: "/home/{{ config_user | default('poberdie') }}/.p10k.zsh"
+        owner: "{{ config_user | default('poberdie') }}"
+        group: "{{ user_group | default('poberdie') }}"
+        mode: 0600
+
+    - name: "zsh | Copy zsh config"
+      tags: dotfiles
+      template:
+        src: "zsh/zshrc.j2"
+        dest: "/home/{{ config_user | default('poberdie') }}/.zshrc"
+        owner: "{{ config_user | default('poberdie') }}"
+        group: "{{ user_group | default('poberdie') }}"
+        mode: 0600
+
+  tags: zsh
+  when: ansible_distribution in ["Debian", "Ubuntu"]

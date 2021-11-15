@@ -1,0 +1,29 @@
+---
+- block:
+    - name: "zsh | Check if oh-my-zsh already installed"
+      stat:
+        path: "/home/{{ config_user | default('poberdie') }}/.oh-my-zsh"
+      register: omz
+
+    # Install oh-my-zsh if not already installed
+    - block:
+        - name: "zsh | Get oh-my-zsh installer"
+          get_url:
+            url: 'https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh'
+            dest: '/tmp/oh-my-zsh-installer.sh'
+            owner: "{{ config_user | default('poberdie') }}"
+            group: "{{ user_group | default('poberdie') }}"
+            mode: 0755
+
+        - name: "zsh | Run oh-my-zsh installer"
+          shell: '/tmp/oh-my-zsh-installer.sh'
+
+        - name: "zsh | Remove oh-my-zsh installer"
+          file:
+            path: '/tmp/oh-my-zsh-installer.sh'
+            state: absent
+      when: not omz.stat.exists
+
+  become: yes
+  become_user: "{{ config_user | default('poberdie') }}"
+  when: ansible_distribution in ["Debian", "Ubuntu"]

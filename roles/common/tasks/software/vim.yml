@@ -1,0 +1,9 @@
+---
+- name: Install vim
+  become: yes
+  tags: utilities,vim
+  package:
+    name: vim
+    state: latest
+    update_cache: yes
+  when: ansible_distribution in ["Debian", "Ubuntu"]

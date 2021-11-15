@@ -1,0 +1,23 @@
+#!/usr/bin/python3
+# Standard Library
+import json
+import sys
+
+# Thirdparty libraries
+from hook_functions import hook_default_time
+
+try:
+    input_stream = sys.stdin.buffer
+except AttributeError:
+    input_stream = sys.stdin
+
+# read in old and new task data
+new = json.loads(input_stream.readline().decode("utf-8", errors="replace"))
+
+###########################################################
+# Call all hooks
+new = hook_default_time(new)
+
+###########################################################
+# Output modified task
+print(json.dumps(new))

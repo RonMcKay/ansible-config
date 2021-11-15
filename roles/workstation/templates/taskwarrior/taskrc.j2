@@ -1,0 +1,106 @@
+# {{ ansible_managed }}
+
+# Files
+data.location=~/.task
+
+# Holidays
+# include ~/configs/taskwarrior/holidays-2021.rc
+# calendar.holidays=sparse
+
+# Color theme
+include ~/.task/dark-gray-blue-256.theme
+
+# customized reports
+## next
+report.next.columns=start.age,person,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,id,description,urgency
+report.next.labels=Active,Person,Age,Deps,P,Project,Tag,Recur,S,Due,Until,ID,Description,Urg
+report.next.filter=status=pending and limit=page and area!=i
+## completed
+report.completed.sort=end-
+## all
+report.all.columns=id,status.short,uuid.short,start.active,entry.age,end.age,depends.indicator,priority,project,tags.count,recur.indicator,wait.remaining,scheduled.remaining,due,until.remaining,description
+## waiting
+report.waiting.sort=wait+,due+
+## inbox report
+report.inbox.context=0
+report.inbox.description=Showing all tasks waiting in the inbox for being processed
+report.inbox.columns=id,entry.age,due,tags,description
+report.inbox.labels=ID,Age,Due,Tags,Description
+report.inbox.filter=area=i and -DELETED
+report.inbox.sort=entry+
+## deleted report
+report.deleted.description=Recently deleted tasks
+report.deleted.columns=id,status.short,uuid.short,start.active,entry.age,end.age,depends.indicator,priority,project,tags.count,recur.indicator,wait.remaining,scheduled.remaining,due,until.remaining,description
+report.deleted.labels=ID,St,UUID,A,Age,Done,D,P,Project,Tags,R,Wait,Sch,Due,Until,Description
+report.deleted.filter=status:Deleted
+report.deleted.sort=end-
+## later
+report.later.description=Tasks with due date 'later'
+report.later.columns=entry.age,depends,priority,project,tags,due.relative,until.remaining,id,description,urgency
+report.later.labels=Age,Deps,P,Project,Tag,Due,Until,ID,Description,Urg
+report.later.filter=+WAITING and wait=later
+report.later.sort=project+/,entry-
+## templates
+report.templates.description=All tasks with label 'TEMPLATE' and not 'DELETED'
+report.templates.columns=id,status.short,recur,start.active,entry.age,end.age,depends.indicator,priority,project,tags,wait.remaining,scheduled.remaining,due,until.remaining,description
+report.templates.labels=ID,St,Recur,A,Age,Done,D,P,Project,Tags,Wait,Sch,Due,Until,Description
+report.templates.filter=+TEMPLATE -DELETED
+report.templates.sort=recur+
+
+# contexts
+## private
+context.private.read=area=p or area=''
+context.private.write=area=p
+context.fortuna.read=((area=p or area='') and project:fortuna)
+context.fortuna.write=area=p and project:fortuna
+## work related
+context.work.read=area=w or area=''
+context.work.write=area=w
+context.research.read=project:res and (area=w or area='')
+context.research.write=area=w
+context.teaching.read=project:teach and (area=w or area='')
+context.teaching.write=area=w
+context.oodgen.read=project:res.oodgen and (area=w or area='')
+context.oodgen.write=project:res.oodgen area=w
+context.shopassist.read=project:teach.pg-shop-assist and (area=w or area='')
+context.shopassist.write=project:teach.pg-shop-assist area=w
+
+# UDAs
+## area
+uda.area.type=string
+uda.area.label=Area
+## person
+uda.person.type=string
+uda.person.label=Person
+
+# Urgency coefficients
+urgency.project.coefficient=0
+urgency.tags.coefficient=0
+urgency.blocked.coefficient=0
+urgency.blocking.coefficient=0
+urgency.annotations.coefficient=0
+urgency.user.tag.respond.coefficient=5
+urgency.user.tag.review.coefficient=3
+urgency.user.tag.money.coefficient=2
+urgency.uda.priority.L.coefficient=-1
+
+# Aliases
+alias.bd=burndown.daily
+alias.bm=burndown.monthly
+
+# Taskd server configuration
+taskd.certificate=~/.task/philipp_oberdiek.cert.pem
+taskd.key=~/.task/philipp_oberdiek.key.pem
+taskd.ca=~/.task/ca.cert.pem
+taskd.server={{ taskd_server }}:53589
+taskd.credentials={{ taskd_credentials }}
+
+# miscellaneous settings
+urgency.inherit=on
+weekstart=monday
+{% if inventory_hostname == 'taskserver' %}
+recurrence=yes
+{% else %}
+recurrence=no
+{% endif %}
+burndown.cumulative=0

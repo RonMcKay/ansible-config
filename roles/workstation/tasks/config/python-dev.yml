@@ -1,0 +1,22 @@
+---
+- name: "python-dev | Ensure pip is installed"
+  become: true
+  apt:
+    name: python3-pip
+    state: latest
+  when: ansible_distribution in ["Debian", "Ubuntu"]
+
+- name: "python-dev | Install python packages"
+  become_user: "{{ config_user | default('poberdie') }}"
+  become: true
+  pip:
+    name: "{{ pkg_name }}"
+    state: latest
+    umask: "0022"
+  loop:
+    - flake8
+    - mypy
+    - isort
+    - autopep8
+  loop_control:
+    loop_var: pkg_name

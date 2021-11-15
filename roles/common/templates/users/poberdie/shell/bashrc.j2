@@ -1,0 +1,18 @@
+# {{ ansible_managed }}
+
+#
+#	~/.bashrc
+# 
+
+if [ -f /etc/bash_completion ] ; then
+  . /etc/bash_completion
+fi
+
+# If not running interactively, don't do anything
+if [ -z "$PS1" ]; then
+  shopt -s expand_aliases
+fi
+
+if [ -f ~/.shrc ]; then
+    source ~/.shrc
+fi

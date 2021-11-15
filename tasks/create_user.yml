@@ -1,0 +1,15 @@
+---
+- name: "Include user vars"
+  include_vars: "{{ user_vars_file }}"
+  when: user_vars_file is defined
+
+- name: "Create user account"
+  become: true
+  user:
+    name: "{{ user_name }}"
+    append: yes
+    groups: "{{ user_groups }}"
+    system: "{{ is_system_user }}"
+    password: "{{ default_password }}"
+    update_password: "on_create"
+  when: ansible_distribution in ["Debian", "Ubuntu"]

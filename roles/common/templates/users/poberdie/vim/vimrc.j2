@@ -1,0 +1,194 @@
+" {{ ansible_managed }}
+
+set guicursor=
+set cursorcolumn
+set cursorline
+set exrc
+set relativenumber
+set nu
+set history=500
+set nohlsearch
+set incsearch
+set noerrorbells
+set visualbell
+set autoindent  " Use indent from current line for next line
+set autoread  " Detect when file changes outside of Vim happend
+set smartindent  " Be clever when code cues are recognized
+set wrap  " Wrap lines
+set linebreak
+set ignorecase
+set smartcase  " do smart case sensitive search, ignorecase has to be enabled
+set hidden
+set expandtab
+set tabstop=4 softtabstop=4
+set shiftwidth=4
+set nocompatible  " Should be set for vimwiki
+set scrolloff=4
+"set signcolumn=yes  " This is for an extra column for linting or errors etc.
+set colorcolumn=80
+set noswapfile
+set nobackup
+set undodir=~/.vim/undodir
+set undofile
+set conceallevel=2
+set viewoptions-=curdir
+set autochdir
+set clipboard=exclude:.*
+
+nnoremap <SPACE> <Nop>
+let mapleader=" "
+nnoremap <leader>t za
+nnoremap <leader>rr :Rg<Space>
+nnoremap <leader>ff :Files<CR>
+nnoremap <leader>cl f]f(ci)
+" horizontal seperator:
+nnoremap <leader>hl o<Enter><Esc>10i-<Esc>o
+nnoremap <C-t> :tabnew<CR>
+inoremap jj <Esc>
+inoremap <C-k> <C-x><C-o>
+
+filetype plugin indent on
+syntax on
+colo default
+
+silent! call plug#begin('~/.vim/plugged')
+" vim fugitive (Git plugin)
+{% if 'workstations' in group_names %}
+Plug 'RonMcKay/vimwiki', { 'branch' : 'improve-tag-link-descriptions' }
+{% endif %}
+Plug 'tpope/vim-surround'
+Plug 'gruvbox-community/gruvbox'
+Plug 'kien/rainbow_parentheses.vim'
+Plug 'jremmen/vim-ripgrep'
+Plug 'junegunn/fzf', { 'do': 'yes \| ./install --key-bindings --completion --no-update-rc'}
+Plug 'junegunn/fzf.vim'
+call plug#end()
+
+silent! colorscheme gruvbox
+silent! set background=dark
+
+let g:rg_command = 'rg --vimgrep -S'
+
+fun! TrimWhitespace()
+    if match(expand('%'), ".*\.md") == -1
+        let l:save = winsaveview()
+        keeppatterns %s/\s\+$//e
+        call winrestview(l:save)
+    endif
+endfun
+
+" # Function to permanently delete views created by 'mkview'
+function! MyDeleteView()
+    let path = fnamemodify(bufname('%'),':p')
+    " vim's odd =~ escaping for /
+    let path = substitute(path, '=', '==', 'g')
+    if empty($HOME)
+    else
+        let path = substitute(path, '^'.$HOME, '\~', '')
+    endif
+    let path = substitute(path, '/', '=+', 'g') . '='
+    " view directory
+    let path = &viewdir.'/'.path
+    call delete(path)
+    echo "Deleted: ".path
+endfunction
+
+" # Command Delview (and it's abbreviation 'delview')
+command Delview call MyDeleteView()
+" Lower-case user commands: http://vim.wikia.com/wiki/Replace_a_builtin_command_using_cabbrev
+cabbrev delview <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'Delview' : 'delview')<CR>
+
+augroup General
+    " The following by the way removes all autocmds that are *within* this
+    " Group when sourcing the config
+    autocmd!
+    autocmd BufWritePre *.* :call TrimWhitespace()
+    autocmd BufWinLeave,BufWrite *.* mkview
+    autocmd BufWinEnter *.* silent! loadview
+    autocmd BufNewFile,BufRead */ansible-config/* if &ft == '' | set filetype=dosini | endif
+    " au VimEnter * RainbowParenthesesToggle
+    " au Syntax * RainbowParenthesesLoadRound
+    " au Syntax * RainbowParenthesesLoadSquare
+    " au Syntax * RainbowParenthesesLoadBraces
+augroup end
+
+{% if 'workstations' in group_names %}
+"-------------------- Vim Wiki ---------------------------
+let wiki_1 = {
+    \ 'path': '~/wiki_work',
+    \ 'syntax': 'markdown',
+    \ 'ext': '.md',
+    \ 'auto_tags': 1,
+    \ 'auto_toc': 1,
+    \ 'template_path': '~/wiki_work/html_templates',
+    \ 'template_default': 'default',
+    \ 'path_html': '~/wiki_work/site_html/',
+    \ 'custom_wiki2html': 'vimwiki_markdown',
+    \ 'template_ext': '.tpl'}
+let wiki_2 = {
+    \ 'path': '~/wiki_private',
+    \ 'syntax': 'markdown',
+    \ 'ext': '.md',
+    \ 'auto_tags': 1,
+    \ 'auto_toc': 1,
+    \ 'template_path': '~/wiki_private/html_templates',
+    \ 'template_default': 'default',
+    \ 'path_html': '~/wiki_private/site_html/',
+    \ 'custom_wiki2html': 'vimwiki_markdown',
+    \ 'template_ext': '.tpl'}
+
+let g:vimwiki_list = [wiki_1, wiki_2]
+let g:vimwiki_global_ext = 0
+let g:vimwiki_folding = 'custom'
+set foldlevel=30
+
+nnoremap <leader>at :VimwikiTable
+nnoremap <leader>mcl :VimwikiTableMoveColumnLeft<CR>
+nnoremap <leader>mcr :VimwikiTableMoveColumnRight<CR>
+nnoremap <leader>tl :CustomVimwikiGenerateTagLinks<Space>
+vmap <leader>fb <S-s>*gv<S-s>*
+augroup vimwikigroup
+	autocmd!
+	" automatically update links on read diary
+	autocmd BufRead,BufNewFile,BufWinEnter diary.md VimwikiDiaryGenerateLinks
+    autocmd BufNewFile ~/wiki_*/diary/*.md silent 0r
+        \ !~/configs/vim/diary_template.py '%'
+    autocmd BufNewFile ~/wiki_*/diary/*.md exec 'norm gg' | startinsert!
+    autocmd FileType vimwiki setlocal foldmethod=expr |
+        \ setlocal foldenable | setlocal foldexpr=VimwikiFoldLevelCustom(v:lnum)
+augroup end
+
+function! VimwikiFoldLevelCustom(lnum)
+  let pounds = strlen(matchstr(getline(a:lnum), '^#\+'))
+  if (pounds)
+    return '>' . pounds  " start a fold level
+  endif
+  if getline(a:lnum) =~? '^\s*$'
+    if (strlen(matchstr(getline(a:lnum + 1), '^#\+')))
+      return '-1' " don't fold last blank line before header
+    endif
+  endif
+  return '=' " return previous fold level
+endfunction
+{% endif %}
+
+"------------------- FZF ----------------------------
+" The popup-window only works with Vim 8.2.191+ with popupwin feature
+" let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
+
+"------------------- Git ----------------------------
+augroup git
+    autocmd!
+    autocmd Filetype gitcommit setlocal spell textwidth=72 | startinsert!
+augroup end
+
+{% if in_wsl %}
+"------------------- WSL ----------------------------
+let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to your mount point
+if executable(s:clip)
+    augroup WSLYank
+        autocmd!
+        autocmd TextYankPost * if v:event.operator ==# 'y' | call system(s:clip, @0) | endif
+    augroup END
+endif
+{% endif %}

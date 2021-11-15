@@ -1,0 +1,30 @@
+---
+- hosts: all
+  connection: local
+  pre_tasks:
+    - include_tasks: tasks/pre_tasks.yml
+      tags: always
+
+  roles:
+    - common
+
+- hosts: workstations
+  gather_facts: no
+  connection: local
+
+  roles:
+    - workstation
+
+- hosts: taskserver
+  gather_facts: no
+  connection: local
+
+  tasks:
+  - name: Include software from workstation role
+    include_role:
+      name: workstation
+      tasks_from: "{{ item }}"
+    loop:
+      - software/syncthing.yml
+      - software/taskwarrior.yml
+      - software/vit.yml

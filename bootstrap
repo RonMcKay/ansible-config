@@ -1,0 +1,29 @@
+#!/bin/bash
+
+umask 022
+
+# Update repositories
+apt-get update
+
+# Install git and ansible
+apt-get install ansible git python3 python3-pip python3-apt sudo -y
+
+python3 -m pip install --upgrade pip
+
+read -rsp "Please enter the vault-password:" VAULT_PASS < /dev/tty
+echo -e "\n"
+
+# remove old password file
+if [[ -f /tmp/.ansible-vault-password ]]; then
+    rm -f /tmp/.ansible-vault-password
+fi
+
+touch /tmp/.ansible-vault-password
+chmod 600 /tmp/.ansible-vault-password
+echo "$VAULT_PASS" > /tmp/.ansible-vault-password
+
+ansible-pull -U https://github.com/ronmckay/ansible-config --vault-id=/tmp/.ansible-vault-password local.yml
+
+if [[ -f /tmp/.ansible-vault-password ]]; then
+    rm -f /tmp/.ansible-vault-password
+fi

@@ -1,0 +1,49 @@
+# {{ ansible_managed }}
+
+# Set the size of the command history
+HISTSIZE=20000
+HISTFILESIZE=20000
+
+# Submodule dependencies
+{% if in_wsl %}
+SYSTEM32=/mnt/c/Windows/System32
+{% endif %}
+CHECKOUTS=$HOME/checkouts
+RESEARCH=$HOME/research
+
+# PYTHONPATH
+export PYTHONPATH=''
+export PYTHONPATH=$PYTHONPATH:$CHECKOUTS
+{% if 'workstations' in group_names %}
+export PYTHONPATH=$PYTHONPATH:$HOME/.task/hooks
+{% endif %}
+
+# linux PATH
+export PATH=/bin
+export PATH=$PATH:$HOME/.local/bin
+export PATH=$PATH:/sbin
+export PATH=$PATH:/usr/bin
+export PATH=$PATH:/usr/local/bin
+{% if 'patrec' in group_names %}
+export PATH=$PATH:/vol/local/install/nodejs/bin  # NodeJS for omniboard (sacred)
+export PATH=$PATH:/vol/local/install/cuda-11.0_debian10/bin
+export PATH=$PATH:/vol/local/install/go/bin
+{% elif 'workstations' in group_names %}
+export PATH=$PATH:/usr/bin/nodejs/bin  # NodeJS for omniboard (sacred)
+{% endif %}
+{% if in_wsl %}
+export PATH=$PATH:$SYSTEM32
+export PATH=$PATH:"/mnt/c/Users/Philipp Oberdiek/AppData/Local/Programs/Microsoft VS Code/bin"
+{% endif %}
+
+{% if 'patrec' in group_names %}
+# Cuda realted stuff
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/vol/local/install/cuda-11.0_debian10/lib64
+export LIBRARY_PATH=$LIBRARY_PATH:/vol/local/install/cuda-11.0_debian10/lib64
+
+{% endif %}
+{% if 'workstations' in group_names %}
+# Miscellaneous
+export LATEXMKRCSYS=$HOME/.latexmkrc
+export OMNIBOARD_CONFIG=$HOME/.omniboard_config.json  # Path to omniboard configuration file
+{% endif %}

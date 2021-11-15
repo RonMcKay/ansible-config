@@ -1,0 +1,32 @@
+# {{ ansible_managed }}
+
+[user]
+	name = Philipp Oberdiek
+	email = {{ git_email|default('git@oberdiek.net') }}
+	signingkey = 8E33DE3E
+[core]
+	editor = vim
+	excludesfile = ~/.gitignore
+	autocrlf = input
+[alias]
+	br = branch -vva
+    cm = commit -v
+	co = checkout
+    cp = cherry-pick
+    lg = log --graph -n 20 --decorate --abbrev-commit --pretty=oneline
+    lga = log --graph --branches --remotes --tags --pretty=oneline --abbrev-commit --decorate -n 20
+    rem = remote -v
+    sa = stash apply
+	sl = stash list
+    spo = stash pop
+    spu = stash push
+	st = status
+    sum = shortlog --summary --numbered --all --no-merges --email
+    wd = diff --word-diff=color
+[commit]
+	template = ~/.gitmessage
+    # gpgsign = true
+[color]
+	ui = true
+[tag]
+    # gpgSign = true

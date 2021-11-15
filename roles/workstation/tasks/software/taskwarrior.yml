@@ -1,0 +1,58 @@
+---
+# This file builds taskwarrior from source if not the requested version
+- name: taskwarrior | Check if taskwarrior is installed
+  tags: tw
+  stat:
+    path: "{{ tw_path }}"
+  register: tw_binary
+
+- name: taskwarrior | Check taskwarrior version
+  tags: tw
+  shell: 'task --version'
+  register: tw_version
+  when: tw_binary.stat.exists
+  changed_when: false
+  failed_when: false
+
+- block:
+    - name: taskwarrior | Install dependencies for build
+      apt:
+        name:
+          - build-essential
+          - git
+          - cmake
+          - make
+          - gcc
+          - uuid-dev
+          - gnutls-dev
+
+    - name: taskwarrior | Pull taskwarrior repository
+      git:
+        repo: 'https://github.com/GothenburgBitFactory/taskwarrior.git'
+        dest: '/tmp/ansible-pull-taskwarrior'
+        depth: 1
+        version: "{{ tw_tag_name }}"
+
+    - name: taskwarrior | Run cmake
+      shell:
+        cmd: 'cmake -DCMAKE_BUILD_TYPE=release .'
+        chdir: '/tmp/ansible-pull-taskwarrior/'
+
+    - name: taskwarrior | Run make
+      shell:
+        cmd: 'make'
+        chdir: '/tmp/ansible-pull-taskwarrior/'
+
+    - name: taskwarrior | Run make install
+      shell:
+        cmd: 'make install'
+        chdir: '/tmp/ansible-pull-taskwarrior/'
+
+    - name: taskwarrior | Remove repo checkout
+      file:
+        path: '/tmp/ansible-pull-taskwarrior/'
+        state: absent
+
+  when: "(not tw_binary.stat.exists or tw_version is not defined or tw_version.stdout != tw_expected_version) and ansible_distribution in ['Debian', 'Ubuntu']"
+  tags: tw
+  become: true

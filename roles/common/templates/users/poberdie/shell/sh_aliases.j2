@@ -1,0 +1,64 @@
+# {{ ansible_managed }}
+
+# handy
+alias ls='ls --color=auto -h'
+alias la='ls -a -h'
+alias lla='ls -a -h -l'
+alias '..'='cd ..'
+alias ll='ls -l -h'
+alias ssh='ssh -X'
+alias sls='screen -ls'
+alias sourcerc='
+if [[ "$SHELL" == */bash ]] && [[ -f ~/.bashrc ]]; then
+    source ~/.bashrc
+elif [[ "$SHELL" == */zsh ]] && [[ -f ~/.zshrc ]]; then
+    source ~/.zshrc
+else
+    source ~/.shrc
+fi'
+
+{% if 'patrec' in group_names %}
+alias pup='cd /etc/puppetlabs/code/environments/production/modules'
+alias backupgrafana='scp bay:/var/lib/grafana/grafana.db /home/poberdie/backups/grafana/'
+alias backupprometheus='scp wenders:/etc/puppetlabs/code/environments/production/modules/prometheus/files/prometheus.yml /home/poberdie/backups/prometheus_server'
+
+{% endif %}
+# initializations
+alias initpaper='$HOME/templates/latex_paper_template/paper_init.sh'
+alias initslides='$HOME/templates/latex_beamer_template/slides_init.sh'
+alias initgutachten='$HOME/templates/Gutachten/gutachten_init.sh'
+
+# graphics cards
+alias path='echo $PATH | tr ":" "\n"'
+alias ppath='echo $PYTHONPATH | tr ":" "\n"'
+alias cvd='. $HOME/scripts/cvd.sh'
+alias resetcvd='unset CUDA_VISIBLE_DEVICES'
+alias nvid='nvidia-smi'
+alias nvl='nvgpu list'
+
+# file operations
+alias col='column -s, -t'
+alias follow='tail -f -n 100'
+alias fcount='ls -1 | wc -l'
+
+# Programs
+alias vw='vim $HOME/wiki_{{ 'private' if private else 'work' }}/index.md'
+alias ltx='latexmk'
+alias open={{ "'wslview'" if in_wsl else "'xdg-open'" }}
+alias tmx='tmux'
+alias tmxa='tmux attach-session'
+{% if 'patrec' not in group_names %}
+alias comni='~/configs/scripts/connect_omniboard.sh'
+alias domni='~/configs/scripts/disconnect_omniboard.sh'
+alias cgrafana='~/configs/scripts/connect_patrec_grafana.sh'
+alias dgrafana='~/configs/scripts/disconnect_patrec_grafana.sh'
+{% else %}
+alias startomniboard='nohup omniboard &> /dev/null &'
+alias stopomniboard='pkill -f "node .*/bin/omniboard"'
+{% endif %}
+
+# Python
+alias python='nice python3'
+alias vpython='nice ./venv/bin/python'
+alias venv='source ./venv/bin/activate'
+alias installvenv="source ./venv/bin/activate && cat requirements.txt | sed -e '/^\s*#.*$/d' -e '/^\s*$/d' | xargs -n 1 python -m pip install"

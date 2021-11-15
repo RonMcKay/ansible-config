@@ -1,0 +1,8 @@
+---
+- name: Install vit package from GitHub
+  become:
+  pip:
+    name: git+https://github.com/vit-project/vit.git@2.x
+    state: latest
+    umask: '0022'
+  when: ansible_distribution in ["Debian", "Ubuntu"]

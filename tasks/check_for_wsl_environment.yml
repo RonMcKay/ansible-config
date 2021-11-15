@@ -1,0 +1,22 @@
+---
+- block:
+    - name: Ensure grep is installed
+      apt:
+        name: grep
+        state: present
+
+    - name: check if in wsl environment
+      shell:
+        cmd: 'if [[ $(grep -Ei "(Microsoft|WSL)" /proc/sys/kernel/osrelease) ]]; then echo 1; else echo 0; fi'
+        executable: 'bash'
+      register: "wsl_check"
+      changed_when: false
+
+    - name: convert wsl environment check to boolean
+      set_fact:
+        in_wsl: "{{ wsl_check.stdout == '1' }}"
+
+    - debug:
+        msg: "in_wsl: {{ in_wsl }}"
+  tags: wsl,always
+  when: ansible_distribution in ["Debian", "Ubuntu"]

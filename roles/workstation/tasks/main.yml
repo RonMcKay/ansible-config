@@ -1,0 +1,12 @@
+---
+# Install software
+- include_tasks: software/zsh.yml
+  when: "shell|default('') == 'zsh'"
+
+- include_tasks: software/taskwarrior.yml
+- include_tasks: software/vit.yml
+- include_tasks: software/syncthing.yml
+
+# Apply user configuration
+- include_tasks: users/poberdie.yml
+  when: getent_passwd.poberdie != None

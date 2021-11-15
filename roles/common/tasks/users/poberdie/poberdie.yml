@@ -1,0 +1,104 @@
+---
+- block:
+    # Shell and environment variables
+    - name: poberdie | Copy shell dotfile templates
+      tags: shell,dotfiles
+      template:
+        src: "{{ item.src  }}"
+        dest: "{{ item.dest }}"
+        owner: poberdie
+        group: "{{ user_group | default('poberdie') }}"
+        mode: 0600
+      loop:
+        - { src: 'users/poberdie/shell/shrc.j2', dest: '/home/poberdie/.shrc' }
+        - { src: 'users/poberdie/shell/sh_aliases.j2', dest: '/home/poberdie/.sh_aliases' }
+        - { src: 'users/poberdie/shell/sh_environment.j2', dest: '/home/poberdie/.sh_environment' }
+        - { src: 'users/poberdie/shell/bashrc.j2', dest: '/home/poberdie/.bashrc'}
+
+    - name: poberdie | ssh | Ensure directory '.ssh' exists
+      tags: ssh
+      file:
+        path: '/home/poberdie/.ssh'
+        state: directory
+        owner: poberdie
+        group: "{{ user_group | default('poberdie') }}"
+        mode: 0755
+
+    # SSH config file
+    - name: poberdie | ssh | Copy ssh config template
+      tags: ssh
+      template:
+        src: users/poberdie/ssh/ssh_config.j2
+        dest: "/home/poberdie/.ssh/config"
+        owner: poberdie
+        group: "{{ user_group | default('poberdie') }}"
+        mode: 0600
+
+    # Git config files
+    - name: poberdie | git | Copy git config files
+      tags: utilities,git,dotfiles
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: poberdie
+        group: "{{ user_group | default('poberdie') }}"
+        mode: 0644
+      loop:
+        - { src: 'users/poberdie/git/gitconfig.j2', dest: '/home/poberdie/.gitconfig' }
+        - { src: 'users/poberdie/git/gitignore.j2', dest: '/home/poberdie/.gitignore' }
+        - { src: 'users/poberdie/git/gitmessage.j2', dest: '/home/poberdie/.gitmessage' }
+
+    # Vim config and plugins
+    - block:
+        - name: poberdie | vim | Ensure necessary directories exist
+          file:
+            path: "{{ item }}"
+            state: directory
+            owner: poberdie
+            group: "{{ user_group | default('poberdie') }}"
+            mode: 0755
+          loop:
+            - '/home/poberdie/.vim/after/ftplugin'
+            - '/home/poberdie/.vim/autoload'
+
+        - name: poberdie | vim | Copy vimrc and >> after << configs
+          tags: dotfiles
+          template:
+            src: "{{ item.src }}"
+            dest: "{{ item.dest }}"
+            owner: poberdie
+            group: "{{ user_group | default('poberdie') }}"
+            mode: 0644
+          loop:
+            - { src: 'users/poberdie/vim/vimrc.j2', dest: '/home/poberdie/.vimrc' }
+            - { src: 'users/poberdie/vim/after/ftplugin/vim.vim.j2', dest: '/home/poberdie/.vim/after/ftplugin/vim.vim' }
+            - { src: 'users/poberdie/vim/after/ftplugin/vimwiki.vim.j2', dest: '/home/poberdie/.vim/after/ftplugin/vimwiki.vim' }
+            - { src: 'users/poberdie/vim/after/ftplugin/yaml.vim.j2', dest: '/home/poberdie/.vim/after/ftplugin/yaml.vim' }
+
+        - name: poberdie | vim | Install PlugInstall
+          get_url:
+            url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+            dest: /home/poberdie/.vim/autoload/plug.vim
+            owner: poberdie
+            group: "{{ user_group | default('poberdie') }}"
+            mode: 0644
+
+        - name: poberdie | vim | Clean vim plugins
+          shell: vim +'silent! PlugClean' +qa
+          changed_when: false
+
+        - name: poberdie | vim | Install vim plugins
+          shell: vim +'silent! PlugInstall' +qa
+          changed_when: false
+
+        - name: poberdie | vim | Install vimwiki_markdown
+          pip:
+            name: vimwiki_markdown
+            state: latest
+            umask: "0022"
+
+      tags: utilities,vim
+
+  when: ansible_distribution in ["Debian", "Ubuntu"]
+  become_user: poberdie
+  become: true
