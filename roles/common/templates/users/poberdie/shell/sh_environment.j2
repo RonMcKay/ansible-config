@@ -3,6 +3,8 @@
 # Set the size of the command history
 HISTSIZE=20000
 HISTFILESIZE=20000
+PROMPT_COMMAND="history -a; history -r"
+export HISTSIZE HISTFILESIZE PROMPT_COMMAND
 
 # Submodule dependencies
 {% if in_wsl %}
