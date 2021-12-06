@@ -53,7 +53,7 @@ alias domni='~/configs/scripts/disconnect_omniboard.sh'
 alias cgrafana='~/configs/scripts/connect_patrec_grafana.sh'
 alias dgrafana='~/configs/scripts/disconnect_patrec_grafana.sh'
 {% else %}
-alias startomniboard='nohup omniboard &> /dev/null &'
+alias startomniboard='omniboard &> /dev/null &'
 alias stopomniboard='pkill -f "node .*/bin/omniboard"'
 {% endif %}
 
