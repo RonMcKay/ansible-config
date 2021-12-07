@@ -19,20 +19,25 @@
       apt:
         name: syncthing
         state: latest
+      register: syncthing_install
 
-    - name: syncthing | Setup syncthing service
-      get_url:
-        url: "https://raw.githubusercontent.com/syncthing/syncthing/main/etc/linux-systemd/system/syncthing%40.service"
-        dest: "/etc/systemd/system/syncthing@.service"
-        owner: root
-        group: root
-        mode: 0644
-      register: syncthing_service
+    - block:
+        - name: syncthing | Setup syncthing service
+          get_url:
+            url: "https://raw.githubusercontent.com/syncthing/syncthing/main/etc/linux-systemd/system/syncthing%40.service"
+            dest: "/etc/systemd/system/syncthing@.service"
+            owner: root
+            group: root
+            mode: 0644
+          register: syncthing_service
 
-    - name: syncthing | Reload daemon if syncthing service changed
-      command: 'systemctl daemon-reload'
-      when: syncthing_service.changed
-      failed_when: false
+        - name: syncthing | Reload daemon if syncthing service changed
+          systemd:
+            daemon_reload: yes
+          when: syncthing_service.changed or syncthing_install.changed
+          failed_when: false
+      
+      when: not in_wsl
 
   when: ansible_distribution in ["Debian", "Ubuntu"]
   become: true

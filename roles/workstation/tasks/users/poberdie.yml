@@ -7,4 +7,15 @@
 - name: poberdie | Install packages for python development
   include_tasks: config/python-dev.yml
 
-# TODO: Add .profile/.zprofile template for WSL distros without services (syncthing)
+- name: poberdie | Restart syncthing service if installation changed
+  systemd:
+    name: "syncthing@poberdie"
+    state: restarted
+  when: (syncthing_service.changed | default(false) or syncthing_install.changed | default(false)) and ansible_distribution in ["Debian", "Ubuntu"] and not in_wsl
+
+- name: poberdie | Ensure syncthing service is running
+  systemd:
+    name: "syncthing@poberdie"
+    state: started
+    enabled: yes
+  when: ansible_distribution in ["Debian", "Ubuntu"] and not in_wsl
