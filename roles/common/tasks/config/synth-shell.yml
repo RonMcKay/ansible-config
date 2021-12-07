@@ -12,7 +12,7 @@
             repo: "https://github.com/andresgongora/synth-shell.git"
             dest: "/tmp/ansible-pull-synth-shell"
             depth: 1
-            version: "v2.4"
+            version: "e2613ef017bf47ed43c5c8222b1e97784678182d"
 
         - name: synth-shell | Run setup
           shell:
