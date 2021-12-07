@@ -16,7 +16,7 @@
 
         - name: synth-shell | Run setup
           shell:
-            cmd: "echo 'iunyynn' | ./setup.sh"
+            cmd: "echo 'iunynnn' | ./setup.sh"
             chdir: "/tmp/ansible-pull-synth-shell"
 
         - name: synth-shell | Remove repo clone
