@@ -17,10 +17,7 @@ if [ -f ~/.shrc ]; then
     source ~/.shrc
 fi
 
-{% if synth_shell is defined and synth_shell.stat.exists %}
 ## Synth-Shell: synth-shell-prompt.sh
 if [ -f ~/.config/synth-shell/synth-shell-prompt.sh ] && [ -n "$( echo $- | grep i )" ]; then
 	source ~/.config/synth-shell/synth-shell-prompt.sh
 fi
-
-{% endif %}
