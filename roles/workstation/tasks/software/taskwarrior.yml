@@ -48,7 +48,7 @@
         cmd: 'make install'
         chdir: '/tmp/ansible-pull-taskwarrior/'
 
-    - name: taskwarrior | Remove repo checkout
+    - name: taskwarrior | Remove repo clone
       file:
         path: '/tmp/ansible-pull-taskwarrior/'
         state: absent
