@@ -19,13 +19,13 @@ fi
 
 {% if synth_shell is defined and synth_shell.stat.exists %}
 ## Synth-Shell: synth-shell-prompt.sh
-if [ -f /home/poberdie/.config/synth-shell/synth-shell-prompt.sh ] && [ -n "$( echo $- | grep i )" ]; then
-	source /home/poberdie/.config/synth-shell/synth-shell-prompt.sh
+if [ -f ~/.config/synth-shell/synth-shell-prompt.sh ] && [ -n "$( echo $- | grep i )" ]; then
+	source ~/.config/synth-shell/synth-shell-prompt.sh
 fi
 
 ## Synth-Shell: better-ls
-if [ -f /home/poberdie/.config/synth-shell/better-ls.sh ] && [ -n "$( echo $- | grep i )" ]; then
-	source /home/poberdie/.config/synth-shell/better-ls.sh
+if [ -f ~/.config/synth-shell/better-ls.sh ] && [ -n "$( echo $- | grep i )" ]; then
+	source ~/.config/synth-shell/better-ls.sh
 fi
 
 {% endif %}
