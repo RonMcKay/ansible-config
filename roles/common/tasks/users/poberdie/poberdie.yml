@@ -1,5 +1,16 @@
 ---
+- include_vars: users/poberdie_vars.yml
+
 - block:
+    - name: poberdie | Set bash as default shell
+      tags: shell,bash
+      shell: 'chsh -s $(which bash) poberdie'
+      become: true
+      changed_when: false
+
+    - name: poberdie | Configure synth-shell
+      include_tasks: config/synth-shell.yml
+
     # Shell and environment variables
     - name: poberdie | Copy shell dotfile templates
       tags: shell,dotfiles

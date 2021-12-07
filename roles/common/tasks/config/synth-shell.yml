@@ -1,0 +1,38 @@
+---
+- block:
+    - name: synth-shell | Check if synth-shell is already installed
+      stat:
+        path: "/home/{{ config_user }}/.config/synth-shell"
+      register: synth_shell
+
+    # Install synth-shell if not existend
+    - block:
+        - name: synth-shell | Clone repository
+          git:
+            repo: "https://github.com/andresgongora/synth-shell.git"
+            dest: "/tmp/ansible-pull-synth-shell"
+            depth: 1
+            version: "v2.4"
+
+        - name: synth-shell | Run setup
+          shell:
+            cmd: "echo 'iunyynn' | ./setup.sh"
+            chdir: "/tmp/ansible-pull-synth-shell"
+
+        - name: synth-shell | Remove repo clone
+          file:
+            path: "/tmp/ansible-pull-synth-shell"
+            state: absent
+      when: not synth_shell.stat.exists
+
+    - name: synth-shell | Copy synth-shell config file
+      copy:
+        src: "synth-shell-prompt.config"
+        dest: "/home/{{ config_user }}/.config/synth-shell/synth-shell-prompt.config"
+        owner: "{{ config_user }}"
+        group: "{{ user_group | default(config_user) }}"
+        mode: 0644
+
+  become_user: "{{ config_user }}"
+  become: true
+  tags: shell,synth-shell
