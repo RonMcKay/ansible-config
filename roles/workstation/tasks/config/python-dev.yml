@@ -7,7 +7,7 @@
   when: ansible_distribution in ["Debian", "Ubuntu"]
 
 - name: "python-dev | Install python packages"
-  become_user: "{{ config_user | default('poberdie') }}"
+  become_user: "{{ config_user }}"
   become: true
   pip:
     name: "{{ pkg_name }}"

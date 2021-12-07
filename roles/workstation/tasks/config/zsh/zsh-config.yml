@@ -1,7 +1,7 @@
 ---
 - block:
     - name: "zsh | Set zsh as default shell"
-      shell: 'chsh -s $(which zsh) {{ config_user | default("poberdie") }}'
+      shell: 'chsh -s $(which zsh) {{ config_user }}'
       become: true
       changed_when: false
 
@@ -15,18 +15,18 @@
       tags: dotfiles
       template:
         src: "zsh/p10k.zsh.j2"
-        dest: "/home/{{ config_user | default('poberdie') }}/.p10k.zsh"
-        owner: "{{ config_user | default('poberdie') }}"
-        group: "{{ user_group | default('poberdie') }}"
+        dest: "/home/{{ config_user }}/.p10k.zsh"
+        owner: "{{ config_user }}"
+        group: "{{ user_group | default(config_user) }}"
         mode: 0600
 
     - name: "zsh | Copy zsh config"
       tags: dotfiles
       template:
         src: "zsh/zshrc.j2"
-        dest: "/home/{{ config_user | default('poberdie') }}/.zshrc"
-        owner: "{{ config_user | default('poberdie') }}"
-        group: "{{ user_group | default('poberdie') }}"
+        dest: "/home/{{ config_user }}/.zshrc"
+        owner: "{{ config_user }}"
+        group: "{{ user_group | default(config_user) }}"
         mode: 0600
 
   tags: zsh
