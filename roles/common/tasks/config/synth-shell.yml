@@ -28,6 +28,7 @@
     - name: synth-shell | Check if powerline-fonts are installed
       shell: "fc-list | grep 'Hack' | wc -l"
       register: powerline_fonts
+      changed_when: false
 
     # Install powerline-fonts
     - block:
