@@ -28,6 +28,16 @@
         - { src: 'users/poberdie/shell/sh_environment.j2', dest: '/home/poberdie/.sh_environment' }
         - { src: 'users/poberdie/shell/bashrc.j2', dest: '/home/poberdie/.bashrc'}
 
+    - name: poberdie | Copy .profile if in WSL environment
+      tags: shell,dotfiles
+      template:
+        src: "users/poberdie/shell/profile.j2"
+        dest: "/home/poberdie/.profile"
+        owner: poberdie
+        group: "{{ user_group | default('poberdie') }}"
+        mode: 0600
+      when: in_wsl
+
     - name: poberdie | ssh | Ensure directory '.ssh' exists
       tags: ssh
       file:
