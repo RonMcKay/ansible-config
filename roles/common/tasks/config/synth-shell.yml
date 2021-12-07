@@ -19,11 +19,34 @@
             cmd: "echo 'iunynnn' | ./setup.sh"
             chdir: "/tmp/ansible-pull-synth-shell"
 
-        - name: synth-shell | Remove repo clone
+        - name: synth-shell | Remove synth-shell repo clone
           file:
             path: "/tmp/ansible-pull-synth-shell"
             state: absent
       when: not synth_shell.stat.exists
+
+    - name: synth-shell | Check if powerline-fonts are installed
+      shell: "fc-list | grep 'Hack' | wc -l"
+      register: powerline_fonts
+
+    # Install powerline-fonts
+    - block:
+        - name: synth-shell | Clone powerline-fonts
+          git:
+            repo: "https://github.com/powerline/fonts.git"
+            dest: "/tmp/ansible-clone-powerline-fonts"
+            depth: 1
+
+        - name: synth-shell | Install powerline-fonts
+          shell:
+            cmd: "./install.sh"
+            chdir: "/tmp/ansible-clone-powerline-fonts"
+
+        - name: synth-shell | Remove powerline-fonts repo clone
+          file:
+            path: "/tmp/ansible-clone-powerline-fonts"
+            state: absent
+      when: powerline_fonts.stdout == '0'
 
     - name: synth-shell | Copy synth-shell config file
       copy:
