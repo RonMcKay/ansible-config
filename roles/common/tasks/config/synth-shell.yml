@@ -25,6 +25,13 @@
             state: absent
       when: not synth_shell.stat.exists
 
+    - name: synth-shell | Make sure 'fontconfig' is installed
+      become_user: root
+      apt:
+        name: fontconfig
+        state: latest
+      when: ansible_distribution in ["Debian", "Ubuntu"]
+
     - name: synth-shell | Check if powerline-fonts are installed
       shell: "fc-list | grep 'Hack' | wc -l"
       register: powerline_fonts
