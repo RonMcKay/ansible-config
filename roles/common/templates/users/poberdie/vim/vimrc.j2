@@ -35,16 +35,32 @@ set viewoptions-=curdir
 set autochdir
 set clipboard=exclude:.*
 
+" Map leader to space
 nnoremap <SPACE> <Nop>
 let mapleader=" "
-nnoremap <leader>t za
+
+" Easier navigation in splits
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+" Search for match in files recursively
 nnoremap <leader>rr :Rg<Space>
+
+" Search for files using fzf
 nnoremap <leader>ff :Files<CR>
-nnoremap <leader>cl f]f(ci)
+
 " horizontal seperator:
 nnoremap <leader>hl o<Enter><Esc>10i-<Esc>o
+
+" Create new tab with Ctrl-t
 nnoremap <C-t> :tabnew<CR>
+
+" Map <Esc> to jj
 inoremap jj <Esc>
+
+" Map omnicomplete to Ctrl-k
 inoremap <C-k> <C-x><C-o>
 
 filetype plugin indent on
@@ -142,18 +158,35 @@ let g:vimwiki_global_ext = 0
 let g:vimwiki_folding = 'custom'
 set foldlevel=30
 
+" Create a vimwiki table
 nnoremap <leader>at :VimwikiTable
+
+" 'move-column-left/right' (mcl/r) in a Vimwiki Table
 nnoremap <leader>mcl :VimwikiTableMoveColumnLeft<CR>
 nnoremap <leader>mcr :VimwikiTableMoveColumnRight<CR>
+
+" Generate vimwiki tag links and reload saved view of the file
 nnoremap <leader>tl :CustomVimwikiGenerateTagLinks<Space>
+
+" Format selected text with double stars
 vmap <leader>fb <S-s>*gv<S-s>*
+
+" Clear markdown links
+nnoremap <leader>cl f]f(ci)
+
 augroup vimwikigroup
 	autocmd!
 	" automatically update links on read diary
 	autocmd BufRead,BufNewFile,BufWinEnter diary.md VimwikiDiaryGenerateLinks
+
+    " When opening a new diary day, run the template script and paste it in
     autocmd BufNewFile ~/wiki_*/diary/*.md silent 0r
         \ !~/configs/vim/diary_template.py '%'
+
+    " Start new diary day in append mode in the header
     autocmd BufNewFile ~/wiki_*/diary/*.md exec 'norm gg' | startinsert!
+
+    " Enable folding for vimwiki (markdown) files
     autocmd FileType vimwiki setlocal foldmethod=expr |
         \ setlocal foldenable | setlocal foldexpr=VimwikiFoldLevelCustom(v:lnum)
 augroup end
@@ -179,6 +212,8 @@ endfunction
 "------------------- Git ----------------------------
 augroup git
     autocmd!
+
+    " Start git commits in append mode and wrap lines at 72 characters
     autocmd Filetype gitcommit setlocal spell textwidth=72 | startinsert!
 augroup end
 
@@ -188,6 +223,7 @@ let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to
 if executable(s:clip)
     augroup WSLYank
         autocmd!
+        " When yanking in WSL on Windows, copy the yanked text to the clipboard
         autocmd TextYankPost * if v:event.operator ==# 'y' | call system(s:clip, @0) | endif
     augroup END
 endif
