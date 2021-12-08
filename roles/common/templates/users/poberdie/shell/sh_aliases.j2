@@ -46,8 +46,6 @@ alias updateconfig='ansible-pull -K -U https://github.com/ronmckay/ansible-confi
 alias vw='vim $HOME/wiki_{{ 'private' if private else 'work' }}/index.md'
 alias ltx='latexmk'
 alias open={{ "'wslview'" if in_wsl else "'xdg-open'" }}
-alias tmx='tmux'
-alias tmxa='tmux attach-session'
 {% if 'patrec' not in group_names %}
 alias comni='~/configs/scripts/connect_omniboard.sh'
 alias domni='~/configs/scripts/disconnect_omniboard.sh'
