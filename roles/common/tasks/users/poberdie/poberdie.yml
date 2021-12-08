@@ -58,7 +58,7 @@
         mode: 0600
 
     # Git config files
-    - name: poberdie | git | Copy git config files
+    - name: poberdie | git | Copy git config templates
       tags: utilities,git,dotfiles
       template:
         src: "{{ item.src }}"
@@ -70,6 +70,10 @@
         - { src: 'users/poberdie/git/gitconfig.j2', dest: '/home/poberdie/.gitconfig' }
         - { src: 'users/poberdie/git/gitignore.j2', dest: '/home/poberdie/.gitignore' }
         - { src: 'users/poberdie/git/gitmessage.j2', dest: '/home/poberdie/.gitmessage' }
+
+    # Configure tmux
+    - name: poberdie | tmux | Configure tmux
+      include_tasks: config/tmux-config.yml
 
     # Vim config and plugins
     - block:

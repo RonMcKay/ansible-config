@@ -1,0 +1,8 @@
+---
+- name: tmux | Copy configuration template
+  template:
+    src: "users/poberdie/tmux.conf.j2"
+    dest: "/home/{{ config_user }}/.tmux.conf"
+    owner: "{{ config_user }}"
+    group: "{{ user_group | default(config_user) }}"
+    mode: 0644

@@ -1,0 +1,7 @@
+---
+- name: tmux | Install tmux
+  become: true
+  apt:
+    name: tmux
+    state: latest
+  when: ansible_distribution in ["Debian", "Ubuntu"]
