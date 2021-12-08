@@ -111,7 +111,7 @@
             mode: 0644
 
         - name: poberdie | vim | Clean vim plugins
-          shell: vim +'silent! PlugClean' +qa
+          shell: vim +'silent! PlugClean!' +qa
           changed_when: false
 
         - name: poberdie | vim | Install vim plugins
