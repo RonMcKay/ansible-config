@@ -2,3 +2,8 @@
 
 command -buffer -nargs=* -complete=custom,vimwiki#tags#complete_tags
     \ CustomVimwikiGenerateTagLinks call vimwiki#tags#generate_tags(1, <f-args>) | loadview
+
+augroup vimwikigroup
+    autocmd!
+    autocmd BufWritePre <buffer> call vimwiki#tags#generate_tags(0) | loadview
+augroup end
