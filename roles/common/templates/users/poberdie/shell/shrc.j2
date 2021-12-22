@@ -17,10 +17,16 @@ fi
 umask 022
 
 # Set the size of the command history
-HISTSIZE=20000
-HISTFILESIZE=20000
-export HISTSIZE HISTFILESIZE
+HISTSIZE=10000
+HISTFILESIZE=50000
+HISTCONTROL=ignoreboth # don't put duplicate lines or lines starting with space in the history.
+export HISTSIZE HISTFILESIZE HISTCONTROL
 
 shopt -s histappend  # Set .history file mode to append
+#
+# Save multi-line commands as such (do not rearange in single line)
+shopt -s cmdhist
+shopt -s lithist
+
 PROMPT_COMMAND="history -a; history -n"
 export PROMPT_COMMAND
