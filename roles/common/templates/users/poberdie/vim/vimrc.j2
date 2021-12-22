@@ -1,8 +1,25 @@
 " {{ ansible_managed }}
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
+"               ██╗   ██╗██╗███╗   ███╗██████╗  ██████╗
+"               ██║   ██║██║████╗ ████║██╔══██╗██╔════╝
+"               ██║   ██║██║██╔████╔██║██████╔╝██║
+"               ╚██╗ ██╔╝██║██║╚██╔╝██║██╔══██╗██║
+"                ╚████╔╝ ██║██║ ╚═╝ ██║██║  ██║╚██████╗
+"                 ╚═══╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" SETTINGS ----------------------------------------------------------------- {{{
+
+" STANDARD ----------------------------------------------------------------- {{{
+
 set guicursor=
 set cursorcolumn
 set cursorline
+set colorcolumn=80
+
 set exrc
 set relativenumber
 set nu
@@ -16,120 +33,48 @@ set autoread  " Detect when file changes outside of Vim happend
 set smartindent  " Be clever when code cues are recognized
 set wrap  " Wrap lines
 set linebreak
+
 set ignorecase
 set smartcase  " do smart case sensitive search, ignorecase has to be enabled
+
 set hidden
 set expandtab
+
 set tabstop=4 softtabstop=4
 set shiftwidth=4
+
 set nocompatible  " Should be set for vimwiki
 set scrolloff=4
 "set signcolumn=yes  " This is for an extra column for linting or errors etc.
-set colorcolumn=80
 set noswapfile
 set nobackup
 set undodir=~/.vim/undodir
 set undofile
+set undoreload=10000
 set conceallevel=2
 set viewoptions-=curdir
 set autochdir
 set clipboard=exclude:.*
 
-" Map leader to space
-nnoremap <SPACE> <Nop>
-let mapleader=" "
+" Enable auto completion menu after pressing TAB.
+set wildmenu
 
-" Easier navigation in splits
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+" Make wildmenu behave like similar to Bash completion.
+set wildmode=list:longest
 
-" Search for match in files recursively
-nnoremap <leader>rr :Rg<Space>
-
-" Search for files using fzf
-nnoremap <leader>ff :Files<CR>
-
-" horizontal seperator:
-nnoremap <leader>hl o<Enter><Esc>10i-<Esc>o
-
-" Create new tab with Ctrl-t
-nnoremap <C-t> :tabnew<CR>
-
-" Map <Esc> to jj
-inoremap jj <Esc>
-
-" Map omnicomplete to Ctrl-k
-inoremap <C-k> <C-x><C-o>
+" There are certain files that we would never want to edit with Vim.
+" Wildmenu will ignore files with these extensions.
+set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 
 filetype plugin indent on
 syntax on
 colo default
 
-silent! call plug#begin('~/.vim/plugged')
-" vim fugitive (Git plugin)
-{% if 'workstations' in group_names %}
-Plug 'RonMcKay/vimwiki', { 'branch' : 'improve-tag-links-generation' }
-{% endif %}
-Plug 'tpope/vim-surround'
-Plug 'gruvbox-community/gruvbox'
-Plug 'kien/rainbow_parentheses.vim'
-Plug 'jremmen/vim-ripgrep'
-Plug 'junegunn/fzf', { 'do': 'yes \| ./install --key-bindings --completion --no-update-rc'}
-Plug 'junegunn/fzf.vim'
-call plug#end()
-
-silent! colorscheme gruvbox
-silent! set background=dark
-
-let g:rg_command = 'rg --vimgrep -S'
-
-fun! TrimWhitespace()
-    if match(expand('%'), ".*\.md") == -1
-        let l:save = winsaveview()
-        keeppatterns %s/\s\+$//e
-        call winrestview(l:save)
-    endif
-endfun
-
-" # Function to permanently delete views created by 'mkview'
-function! MyDeleteView()
-    let path = fnamemodify(bufname('%'),':p')
-    " vim's odd =~ escaping for /
-    let path = substitute(path, '=', '==', 'g')
-    if empty($HOME)
-    else
-        let path = substitute(path, '^'.$HOME, '\~', '')
-    endif
-    let path = substitute(path, '/', '=+', 'g') . '='
-    " view directory
-    let path = &viewdir.'/'.path
-    call delete(path)
-    echo "Deleted: ".path
-endfunction
-
-" # Command Delview (and it's abbreviation 'delview')
-command Delview call MyDeleteView()
-" Lower-case user commands: http://vim.wikia.com/wiki/Replace_a_builtin_command_using_cabbrev
-cabbrev delview <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'Delview' : 'delview')<CR>
-
-augroup General
-    " The following by the way removes all autocmds that are *within* this
-    " Group when sourcing the config
-    autocmd!
-    autocmd BufWritePre *.* :call TrimWhitespace()
-    autocmd BufWinLeave,BufWrite *.* mkview
-    autocmd BufWinEnter *.* silent! loadview
-    autocmd BufNewFile,BufRead */ansible-config/* if &ft == '' | set filetype=dosini | endif
-    " au VimEnter * RainbowParenthesesToggle
-    " au Syntax * RainbowParenthesesLoadRound
-    " au Syntax * RainbowParenthesesLoadSquare
-    " au Syntax * RainbowParenthesesLoadBraces
-augroup end
+" }}}
 
 {% if 'workstations' in group_names %}
-"-------------------- Vim Wiki ---------------------------
+" VIMWIKI ------------------------------------------------------------------ {{{
+
 let wiki_1 = {
     \ 'path': '~/wiki_work',
     \ 'syntax': 'markdown',
@@ -158,6 +103,51 @@ let g:vimwiki_global_ext = 0
 let g:vimwiki_folding = 'custom'
 set foldlevel=30
 
+" }}}
+{% endif %}
+
+" }}}
+
+" PLUGINS ------------------------------------------------------------------ {{{
+
+silent! call plug#begin('~/.vim/plugged')
+{% if 'workstations' in group_names %}
+Plug 'RonMcKay/vimwiki', { 'branch' : 'improve-tag-links-generation' }
+{% endif %}
+Plug 'tpope/vim-surround'
+Plug 'gruvbox-community/gruvbox'
+Plug 'kien/rainbow_parentheses.vim'
+Plug 'jremmen/vim-ripgrep'
+Plug 'junegunn/fzf', { 'do': 'yes \| ./install --key-bindings --completion --no-update-rc'}
+Plug 'junegunn/fzf.vim'
+call plug#end()
+
+" }}}
+
+" MAPPINGS ----------------------------------------------------------------- {{{
+
+" Map leader to space
+nnoremap <SPACE> <Nop>
+let mapleader=" "
+
+" Easier navigation in splits
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+" Search for match in files recursively
+nnoremap <leader>rr :Rg<CR>
+
+" Search for files using fzf
+nnoremap <leader>ff :Files<CR>
+
+" horizontal seperator:
+nnoremap <leader>hl o<Enter><Esc>10i-<Esc>o
+
+" Create new tab with Ctrl-t
+nnoremap <C-t> :tabnew<CR>
+
 " Create a vimwiki table
 nnoremap <leader>at :VimwikiTable
 
@@ -168,11 +158,117 @@ nnoremap <leader>mcr :VimwikiTableMoveColumnRight<CR>
 " Generate vimwiki tag links and reload saved view of the file
 nnoremap <leader>tl :CustomVimwikiGenerateTagLinks<Space>
 
+" Clear markdown links
+nnoremap <leader>cl f]f(ci)
+
+" Open markdown file in default viewer
+nnoremap <leader>mv :!open %<CR>
+
+" Map <Esc> to jj
+inoremap jj <Esc>
+
+" Map omnicomplete to Ctrl-k
+inoremap <C-k> <C-x><C-o>
+
+" Map fzf line completion to Ctrl-f
+inoremap <C-f> <plug>(fzf-complete-line)
+
 " Format selected text with double stars
 vmap <leader>fb <S-s>*gv<S-s>*
 
-" Clear markdown links
-nnoremap <leader>cl f]f(ci)
+" }}}
+
+" FUNCTIONS ---------------------------------------------------------------- {{{
+
+fun! TrimWhitespace()
+    if match(expand('%'), ".*\.md") == -1
+        let l:save = winsaveview()
+        keeppatterns %s/\s\+$//e
+        call winrestview(l:save)
+    endif
+endfun
+
+" # Function to permanently delete views created by 'mkview'
+function! MyDeleteView()
+    let path = fnamemodify(bufname('%'),':p')
+    " vim's odd =~ escaping for /
+    let path = substitute(path, '=', '==', 'g')
+    if empty($HOME)
+    else
+        let path = substitute(path, '^'.$HOME, '\~', '')
+    endif
+    let path = substitute(path, '/', '=+', 'g') . '='
+    " view directory
+    let path = &viewdir.'/'.path
+    call delete(path)
+    echo "Deleted: ".path
+endfunction
+
+function! VimwikiFoldLevelCustom(lnum)
+  let pounds = strlen(matchstr(getline(a:lnum), '^#\+'))
+  if (pounds)
+    return '>' . pounds  " start a fold level
+  endif
+  if getline(a:lnum) =~? '^\s*$'
+    if (strlen(matchstr(getline(a:lnum + 1), '^#\+')))
+      return '-1' " don't fold last blank line before header
+    endif
+  endif
+  return '=' " return previous fold level
+endfunction
+
+" }}}
+
+" VIMSCRIPT ---------------------------------------------------------------- {{{
+
+if has('gui')
+    silent! colorscheme gruvbox
+    silent! set background=dark
+endif
+
+" }}}
+
+" COMMANDS ----------------------------------------------------------------- {{{
+
+" # Command Delview (and it's abbreviation 'delview')
+command Delview call MyDeleteView()
+" Lower-case user commands: http://vim.wikia.com/wiki/Replace_a_builtin_command_using_cabbrev
+cabbrev delview <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'Delview' : 'delview')<CR>
+
+command! -bang -nargs=* Rg call fzf#vim#grep('rg --hidden --column --line-number --no-heading --color=always --smart-case --glob "!.git/*" --glob "!venv/*" -- ' .shellescape(<q-args>), 1, fzf#vim#with_preview(), <bang>0)
+
+" }}}
+
+" AUTO-COMMANDS ------------------------------------------------------------ {{{
+
+" This will enable code folding.
+" Use the marker method of folding.
+augroup filetype_vim
+    autocmd!
+    autocmd FileType vim setlocal foldmethod=marker
+augroup END
+
+" You can split a window into sections by typing `:split` or `:vsplit`.
+" Display cursorline and cursorcolumn ONLY in active window.
+augroup cursor_off
+    autocmd!
+    autocmd WinLeave * set nocursorline nocursorcolumn
+    autocmd WinEnter * set cursorline cursorcolumn
+augroup END
+
+augroup General
+    " The following by the way removes all autocmds that are *within* this
+    " Group when sourcing the config
+    autocmd!
+    autocmd BufWritePre *.* :call TrimWhitespace()
+    autocmd BufWinLeave,BufWrite *.* mkview
+    autocmd BufWinEnter *.* silent! loadview
+    autocmd BufNewFile,BufRead */ansible-config/* if &ft == '' | set filetype=dosini | endif
+    " au VimEnter * RainbowParenthesesToggle
+    " au Syntax * RainbowParenthesesLoadRound
+    " au Syntax * RainbowParenthesesLoadSquare
+    " au Syntax * RainbowParenthesesLoadBraces
+augroup end
 
 augroup vimwikigroup
 	autocmd!
@@ -191,25 +287,6 @@ augroup vimwikigroup
         \ setlocal foldenable | setlocal foldexpr=VimwikiFoldLevelCustom(v:lnum)
 augroup end
 
-function! VimwikiFoldLevelCustom(lnum)
-  let pounds = strlen(matchstr(getline(a:lnum), '^#\+'))
-  if (pounds)
-    return '>' . pounds  " start a fold level
-  endif
-  if getline(a:lnum) =~? '^\s*$'
-    if (strlen(matchstr(getline(a:lnum + 1), '^#\+')))
-      return '-1' " don't fold last blank line before header
-    endif
-  endif
-  return '=' " return previous fold level
-endfunction
-{% endif %}
-
-"------------------- FZF ----------------------------
-" The popup-window only works with Vim 8.2.191+ with popupwin feature
-" let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
-
-"------------------- Git ----------------------------
 augroup git
     autocmd!
 
@@ -218,7 +295,6 @@ augroup git
 augroup end
 
 {% if in_wsl %}
-"------------------- WSL ----------------------------
 let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to your mount point
 if executable(s:clip)
     augroup WSLYank
@@ -228,3 +304,24 @@ if executable(s:clip)
     augroup END
 endif
 {% endif %}
+
+" }}}
+
+" STATUS LINE -------------------------------------------------------------- {{{
+
+" Clear status line when vimrc is reloaded.
+set statusline=
+
+" Status line left side.
+set statusline+=\ %F\ %M\ %Y\ %R
+
+" Use a divider to separate the left side from the right side.
+set statusline+=%=
+
+" Status line right side.
+set statusline+=\ ascii:\ %b\ hex:\ 0x%B\ row:\ %l\ col:\ %c\ percent:\ %p%%
+
+" Show the status on the second to last line.
+set laststatus=2
+
+" }}}
