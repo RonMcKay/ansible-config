@@ -15,3 +15,12 @@ elif [[ "$SHELL" == */zsh ]] && [[ -f ~/.fzf.zsh ]]; then
 fi
 
 umask 022
+
+# Set the size of the command history
+HISTSIZE=20000
+HISTFILESIZE=20000
+export HISTSIZE HISTFILESIZE
+
+shopt -s histappend  # Set .history file mode to append
+PROMPT_COMMAND="history -a; history -n"
+export PROMPT_COMMAND
