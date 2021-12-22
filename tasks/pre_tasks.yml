@@ -3,7 +3,6 @@
     - include_tasks: tasks/check_for_wsl_environment.yml
 
     - name: update repo cache (Debian, Ubuntu)
-      become: true
       apt:
         update_cache: yes
       changed_when: false
@@ -21,4 +20,6 @@
         fail_key: false
 
   when: ansible_distribution in ["Debian", "Ubuntu"]
+  become: true
+  become_user: root
   tags: always
