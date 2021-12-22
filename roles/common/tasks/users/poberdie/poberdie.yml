@@ -90,17 +90,17 @@
 
         - name: poberdie | vim | Copy vimrc and >> after << configs
           tags: dotfiles
-          template:
+          copy:
             src: "{{ item.src }}"
             dest: "{{ item.dest }}"
             owner: poberdie
             group: "{{ user_group | default('poberdie') }}"
             mode: 0644
           loop:
-            - { src: 'users/poberdie/vim/vimrc.j2', dest: '/home/poberdie/.vimrc' }
-            - { src: 'users/poberdie/vim/after/ftplugin/vim.vim.j2', dest: '/home/poberdie/.vim/after/ftplugin/vim.vim' }
-            - { src: 'users/poberdie/vim/after/ftplugin/vimwiki.vim.j2', dest: '/home/poberdie/.vim/after/ftplugin/vimwiki.vim' }
-            - { src: 'users/poberdie/vim/after/ftplugin/yaml.vim.j2', dest: '/home/poberdie/.vim/after/ftplugin/yaml.vim' }
+            - { src: 'users/poberdie/vim/vimrc', dest: '/home/poberdie/.vimrc' }
+            - { src: 'users/poberdie/vim/after/ftplugin/vim.vim', dest: '/home/poberdie/.vim/after/ftplugin/vim.vim' }
+            - { src: 'users/poberdie/vim/after/ftplugin/vimwiki.vim', dest: '/home/poberdie/.vim/after/ftplugin/vimwiki.vim' }
+            - { src: 'users/poberdie/vim/after/ftplugin/yaml.vim', dest: '/home/poberdie/.vim/after/ftplugin/yaml.vim' }
 
         - name: poberdie | vim | Install PlugInstall
           get_url:

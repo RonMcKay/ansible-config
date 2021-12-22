@@ -1,4 +1,4 @@
-" {{ ansible_managed }}
+" Ansible managed
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "
@@ -72,7 +72,6 @@ colo default
 
 " }}}
 
-{% if 'workstations' in group_names %}
 " VIMWIKI ------------------------------------------------------------------ {{{
 
 let wiki_1 = {
@@ -104,16 +103,13 @@ let g:vimwiki_folding = 'custom'
 set foldlevel=30
 
 " }}}
-{% endif %}
 
 " }}}
 
 " PLUGINS ------------------------------------------------------------------ {{{
 
 silent! call plug#begin('~/.vim/plugged')
-{% if 'workstations' in group_names %}
 Plug 'RonMcKay/vimwiki', { 'branch' : 'improve-tag-links-generation' }
-{% endif %}
 Plug 'tpope/vim-surround'
 Plug 'gruvbox-community/gruvbox'
 Plug 'kien/rainbow_parentheses.vim'
@@ -294,7 +290,6 @@ augroup git
     autocmd Filetype gitcommit setlocal spell textwidth=72 | startinsert!
 augroup end
 
-{% if in_wsl %}
 let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to your mount point
 if executable(s:clip)
     augroup WSLYank
@@ -303,7 +298,6 @@ if executable(s:clip)
         autocmd TextYankPost * if v:event.operator ==# 'y' | call system(s:clip, @0) | endif
     augroup END
 endif
-{% endif %}
 
 " }}}
 
