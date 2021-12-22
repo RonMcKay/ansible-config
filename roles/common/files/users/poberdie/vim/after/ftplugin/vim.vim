@@ -1,3 +1,3 @@
-" {{ ansible_managed }}
+" Ansible managed
 
 set textwidth=0

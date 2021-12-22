@@ -1,4 +1,4 @@
-" {{ ansible_managed }}
+" Ansible managed
 
 command -buffer -nargs=* -complete=custom,vimwiki#tags#complete_tags
     \ CustomVimwikiGenerateTagLinks call vimwiki#tags#generate_tags(1, <f-args>) | loadview
