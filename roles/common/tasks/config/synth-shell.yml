@@ -61,7 +61,7 @@
         src: "synth-shell-prompt.config"
         dest: "/home/{{ config_user }}/.config/synth-shell/synth-shell-prompt.config"
         owner: "{{ config_user }}"
-        group: "{{ user_group | default(config_user) }}"
+        group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
         mode: 0644
 
   become_user: "{{ config_user }}"

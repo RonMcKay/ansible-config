@@ -17,7 +17,7 @@
         src: "zsh/p10k.zsh.j2"
         dest: "/home/{{ config_user }}/.p10k.zsh"
         owner: "{{ config_user }}"
-        group: "{{ user_group | default(config_user) }}"
+        group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
         mode: 0600
 
     - name: "zsh | Copy zsh config"
@@ -26,7 +26,7 @@
         src: "zsh/zshrc.j2"
         dest: "/home/{{ config_user }}/.zshrc"
         owner: "{{ config_user }}"
-        group: "{{ user_group | default(config_user) }}"
+        group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
         mode: 0600
 
   tags: zsh

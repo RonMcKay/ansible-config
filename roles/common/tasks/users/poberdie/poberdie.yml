@@ -20,7 +20,7 @@
         src: "{{ item.src  }}"
         dest: "{{ item.dest }}"
         owner: poberdie
-        group: "{{ user_group | default('poberdie') }}"
+        group: "{{ user_group if user_group is defined else (getent_passwd.get('poberdie')[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else 'poberdie') }}"
         mode: 0600
       loop:
         - { src: 'users/poberdie/shell/shrc.j2', dest: '/home/poberdie/.shrc' }
@@ -34,7 +34,7 @@
         src: "users/poberdie/shell/profile.j2"
         dest: "/home/poberdie/.profile"
         owner: poberdie
-        group: "{{ user_group | default('poberdie') }}"
+        group: "{{ user_group if user_group is defined else (getent_passwd.get('poberdie')[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else 'poberdie') }}"
         mode: 0600
       when: in_wsl
 
@@ -44,7 +44,7 @@
         path: '/home/poberdie/.ssh'
         state: directory
         owner: poberdie
-        group: "{{ user_group | default('poberdie') }}"
+        group: "{{ user_group if user_group is defined else (getent_passwd.get('poberdie')[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else 'poberdie') }}"
         mode: 0755
 
     # SSH config file
@@ -54,7 +54,7 @@
         src: users/poberdie/ssh/ssh_config.j2
         dest: "/home/poberdie/.ssh/config"
         owner: poberdie
-        group: "{{ user_group | default('poberdie') }}"
+        group: "{{ user_group if user_group is defined else (getent_passwd.get('poberdie')[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else 'poberdie') }}"
         mode: 0600
 
     # Git config files
@@ -64,7 +64,7 @@
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
         owner: poberdie
-        group: "{{ user_group | default('poberdie') }}"
+        group: "{{ user_group if user_group is defined else (getent_passwd.get('poberdie')[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else 'poberdie') }}"
         mode: 0644
       loop:
         - { src: 'users/poberdie/git/gitconfig.j2', dest: '/home/poberdie/.gitconfig' }
@@ -82,7 +82,7 @@
             path: "{{ item }}"
             state: directory
             owner: poberdie
-            group: "{{ user_group | default('poberdie') }}"
+            group: "{{ user_group if user_group is defined else (getent_passwd.get('poberdie')[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else 'poberdie') }}"
             mode: 0755
           loop:
             - '/home/poberdie/.vim/after/ftplugin'
@@ -94,7 +94,7 @@
             src: "{{ item.src }}"
             dest: "{{ item.dest }}"
             owner: poberdie
-            group: "{{ user_group | default('poberdie') }}"
+            group: "{{ user_group if user_group is defined else (getent_passwd.get('poberdie')[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else 'poberdie') }}"
             mode: 0644
           loop:
             - { src: 'users/poberdie/vim/vimrc', dest: '/home/poberdie/.vimrc' }
@@ -107,7 +107,7 @@
             url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
             dest: /home/poberdie/.vim/autoload/plug.vim
             owner: poberdie
-            group: "{{ user_group | default('poberdie') }}"
+            group: "{{ user_group if user_group is defined else (getent_passwd.get('poberdie')[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else 'poberdie') }}"
             mode: 0644
 
         - name: poberdie | vim | Clean vim plugins

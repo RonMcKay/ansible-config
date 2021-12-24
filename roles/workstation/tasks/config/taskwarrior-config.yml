@@ -8,7 +8,7 @@
     state: directory
     mode: 0755
     owner: "{{ config_user }}"
-    group: "{{ user_group | default(config_user) }}"
+    group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
 
 - name: "vit | Copy vit configuration template"
   tags: tw,vit
@@ -16,7 +16,7 @@
     src: "taskwarrior/vit-config.ini.j2"
     dest: "/home/{{ config_user }}/.vit/config.ini"
     owner: "{{ config_user }}"
-    group: "{{ user_group | default(config_user) }}"
+    group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
     mode: 0644
 
 - name: "tw | Ensure '/home/{{ config_user }}/.task' exists"
@@ -26,7 +26,7 @@
     state: directory
     mode: 0700
     owner: "{{ config_user }}"
-    group: "{{ user_group | default(config_user) }}"
+    group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
 
 - name: "tw | Copy taskwarrior files"
   tags: tw
@@ -34,7 +34,7 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     owner: "{{ config_user }}"
-    group: "{{ user_group | default(config_user) }}"
+    group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
     mode: 0600
   loop:
     - { src: "taskwarrior/ca.cert.pem", dest: "/home/{{ config_user }}/.task/ca.cert.pem" }
@@ -49,7 +49,7 @@
     src: "taskwarrior/taskrc.j2"
     dest: "/home/{{ config_user }}/.taskrc"
     owner: "{{ config_user }}"
-    group: "{{ user_group | default(config_user) }}"
+    group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
     mode: 0600
 
 - name: "tw | Sync with taskd server"

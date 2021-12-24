@@ -12,7 +12,7 @@
             url: 'https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh'
             dest: '/tmp/oh-my-zsh-installer.sh'
             owner: "{{ config_user }}"
-            group: "{{ user_group | default(config_user) }}"
+            group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
             mode: 0755
 
         - name: "zsh | Run oh-my-zsh installer"
