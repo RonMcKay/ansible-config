@@ -14,6 +14,18 @@ elif [[ "$SHELL" == */zsh ]] && [[ -f ~/.fzf.zsh ]]; then
     source ~/.fzf.zsh
 fi
 
+{% if in_wsl %}
+# GPG Socket
+# Removing Linux GPG Agent socket and replacing it by link to wsl2-ssh-pageant GPG socket
+export GPG_AGENT_SOCK=$HOME/.gnupg/S.gpg-agent
+"/mnt/c/Program Files (x86)/GnuPG/bin/gpg.exe" --card-status &> /dev/null
+ss -a | grep -q $GPG_AGENT_SOCK
+if [ $? -ne 0 ]; then
+  rm -rf $GPG_AGENT_SOCK
+  setsid nohup socat UNIX-LISTEN:$GPG_AGENT_SOCK,fork EXEC:"$HOME/.ssh/wsl2-ssh-pageant.exe --gpg S.gpg-agent" &>/dev/null &
+fi
+
+{% endif %}
 umask 022
 
 # Set the size of the command history
