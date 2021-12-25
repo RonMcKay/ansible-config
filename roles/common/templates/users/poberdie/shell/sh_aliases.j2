@@ -42,7 +42,7 @@ alias follow='tail -f -n 100'
 alias fcount='ls -1 | wc -l'
 
 # Programs
-alias updateconfig='ansible-pull -K -U https://github.com/ronmckay/ansible-config'
+alias updateconfig='ansible-pull -K -l $(hostname) -U https://github.com/ronmckay/ansible-config'
 alias vw='vim $HOME/wiki_{{ 'private' if private else 'work' }}/index.md'
 alias ltx='latexmk'
 alias open={{ "'wslview'" if in_wsl else "'xdg-open'" }}
