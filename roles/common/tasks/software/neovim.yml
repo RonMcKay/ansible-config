@@ -51,7 +51,7 @@
 
     - name: neovim | Run make install
       shell:
-        cmd: "make{{' CMAKE_INSTALL_PREFIX=~/.local/neovim' if nvim_install_user is defined else ''}} install"
+        cmd: "make{{' CMAKE_INSTALL_PREFIX=~/.local/neovim' if nvim_install_user is defined else ''}} CMAKE_BUILD_TYPE=Release install"
         chdir: '/tmp/ansible-pull-neovim/'
 
     - name: neovim | Remove repo clone
