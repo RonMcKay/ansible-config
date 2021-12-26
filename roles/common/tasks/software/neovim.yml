@@ -2,7 +2,7 @@
 - name: neovim | Check if neovim is installed
   tags: nvim
   stat:
-    path: "{{ nvim_path }}"
+    path: "{{ nvim_path if nvim_install_user is not defined else '/home/' + nvim_install_user + '/.local/neovim' }}"
   register: nvim_binary
 
 - name: neovim | Check neovim version
@@ -43,12 +43,12 @@
 
     - name: neovim | Run make
       shell:
-        cmd: 'make'
+        cmd: 'make CMAKE_BUILD_TYPE=Release'
         chdir: '/tmp/ansible-pull-neovim/'
 
     - name: neovim | Run make install
       shell:
-        cmd: 'make install'
+        cmd: "make{{' CMAKE_INSTALL_PREFIX=~/.local/neovim' if nvim_install_user is defined else ''}} install"
         chdir: '/tmp/ansible-pull-neovim/'
 
     - name: neovim | Remove repo clone
@@ -59,3 +59,4 @@
   when: "(not nvim_binary.stat.exists or nvim_version is not defined or nvim_version.stdout != nvim_expected_version) and ansible_distribution in ['Debian', 'Ubuntu']"
   tags: nvim
   become: true
+  become_user: "{{ nvim_install_user if nvim_install_user is defined else 'root' }}"
