@@ -77,7 +77,7 @@
 
     # Vim config and plugins
     - block:
-        - name: poberdie | vim | Ensure necessary directories exist
+        - name: poberdie | vim/neovim | Ensure necessary directories exist
           file:
             path: "{{ item }}"
             state: directory
@@ -91,7 +91,7 @@
             - '/home/poberdie/.vim/after/ftplugin'
             - '/home/poberdie/.vim/autoload'
 
-        - name: poberdie | vim | Copy vimrc and >> after << configs
+        - name: poberdie | vim/neovim | Copy vimrr, init.vim and all config directories
           tags: dotfiles
           copy:
             src: "{{ item.src }}"
@@ -100,20 +100,27 @@
             group: "{{ user_group if user_group is defined else (getent_passwd.get('poberdie')[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else 'poberdie') }}"
             mode: 0644
           loop:
+            - { src: 'users/poberdie/vim/init.vim', dest: '/home/poberdie/.config/nvim/init.vim'}
+            - { src: 'users/poberdie/vim/after', dest: '/home/poberdie/.config/nvim/after'}
+            - { src: 'users/poberdie/vim/ftplugin', dest: '/home/poberdie/.config/nvim/ftplugin'}
+            - { src: 'users/poberdie/vim/plugins', dest: '/home/poberdie/.config/nvim/plugins'}
             - { src: 'users/poberdie/vim/vimrc', dest: '/home/poberdie/.vimrc' }
             - { src: 'users/poberdie/vim/after', dest: '/home/poberdie/.vim/after' }
             - { src: 'users/poberdie/vim/ftplugin', dest: '/home/poberdie/.vim/ftplugin'}
 
-
-        - name: poberdie | vim | Clean vim plugins
-          shell: vim +'silent! PlugClean!' +qa
+        - name: poberdie | nvim | Update nvim plugins
+          shell: nvim +'silent! PlugUpdate' +qa
           changed_when: false
 
-        - name: poberdie | vim | Install vim plugins
-          shell: vim +'silent! PlugInstall' +qa
+        - name: poberdie | nvim | Clean nvim plugins
+          shell: nvim +'silent! PlugClean!' +qa
           changed_when: false
 
-        - name: poberdie | vim | Install vimwiki_markdown
+        - name: poberdie | nvim | Install nvim plugins
+          shell: nvim +'silent! PlugInstall' +qa
+          changed_when: false
+
+        - name: poberdie | nvim | Install vimwiki_markdown
           pip:
             name: vimwiki_markdown
             state: latest
