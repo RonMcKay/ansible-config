@@ -111,14 +111,17 @@
         - name: poberdie | nvim | Update nvim plugins
           shell: nvim +'silent! PlugUpdate' +qa
           changed_when: false
+          failed_when: false
 
         - name: poberdie | nvim | Clean nvim plugins
           shell: nvim +'silent! PlugClean!' +qa
           changed_when: false
+          failed_when: false
 
         - name: poberdie | nvim | Install nvim plugins
           shell: nvim +'silent! PlugInstall' +qa
           changed_when: false
+          failed_when: false
 
         - name: poberdie | nvim | Install vimwiki_markdown
           pip:
