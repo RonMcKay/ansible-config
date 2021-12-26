@@ -8,6 +8,12 @@ alias lla='ls -a -h -l'
 alias '..'='cd ..'
 alias ssh='ssh -X'
 alias sls='screen -ls'
+{% if inventory_hostname == 'HomeServer' %}
+alias oh='cd /etc/openhab'
+alias ohauto='cd /etc/openhab/automation/jsr223/python/personal'
+alias ohl='tail -f -n 100 /var/log/openhab/openhab.log'
+alias ohel='tail -f -n 100 /var/log/openhab/events.log'
+{% endif %}
 alias sourcerc='
 if [[ "$SHELL" == */bash ]] && [[ -f ~/.bashrc ]]; then
     source ~/.bashrc
