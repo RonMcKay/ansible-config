@@ -126,7 +126,7 @@
             state: latest
             umask: "0022"
 
-      tags: utilities,vim
+      tags: utilities,vim,nvim
 
   when: ansible_distribution in ["Debian", "Ubuntu"]
   become_user: poberdie
