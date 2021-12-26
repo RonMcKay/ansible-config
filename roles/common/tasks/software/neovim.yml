@@ -1,9 +1,61 @@
 ---
-- name: Install neovim
-  become: yes
-  tags: utilities,vim
-  package:
-    name: neovim
-    state: latest
-    update_cache: yes
-  when: ansible_distribution in ["Debian", "Ubuntu"]
+- name: neovim | Check if neovim is installed
+  tags: nvim
+  stat:
+    path: "{{ nvim_path }}"
+  register: nvim_binary
+
+- name: neovim | Check neovim version
+  tags: nvim
+  shell: "{{ nvim_path }} --version | head -n 1 | awk -F ' ' '{print $2}'"
+  register: nvim_version
+  when: nvim_binary.stat.exists
+  changed_when: false
+  failed_when: false
+
+- block:
+    - name: neovim | Install dependencies for build
+      apt:
+        name:
+          - build-essential
+          - git
+          - make
+          - gcc
+          - ninja-build
+          - gettext
+          - libtool
+          - libtool-bin
+          - autoconf
+          - automake
+          - cmake
+          - g++
+          - pkg-config
+          - unzip
+          - curl
+          - doxygen
+
+    - name: neovim | Pull neovim repository
+      git:
+        repo: 'https://github.com/neovim/neovim.git'
+        dest: '/tmp/ansible-pull-neovim'
+        depth: 1
+        version: "{{ nvim_tag_name }}"
+
+    - name: neovim | Run make
+      shell:
+        cmd: 'make'
+        chdir: '/tmp/ansible-pull-neovim/'
+
+    - name: neovim | Run make install
+      shell:
+        cmd: 'make install'
+        chdir: '/tmp/ansible-pull-neovim/'
+
+    - name: neovim | Remove repo clone
+      file:
+        path: '/tmp/ansible-pull-neovim/'
+        state: absent
+
+  when: "(not nvim_binary.stat.exists or nvim_version is not defined or nvim_version.stdout != nvim_expected_version) and ansible_distribution in ['Debian', 'Ubuntu']"
+  tags: nvim
+  become: true

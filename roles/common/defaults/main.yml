@@ -1,0 +1,4 @@
+---
+nvim_tag_name: 'v0.6.0'
+nvim_expected_version: 'v0.6.0'
+tw_path: '/usr/bin/nvim'
