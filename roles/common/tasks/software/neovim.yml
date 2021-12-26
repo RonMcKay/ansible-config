@@ -13,27 +13,30 @@
   changed_when: false
   failed_when: false
 
-- block:
-    - name: neovim | Install dependencies for build
-      apt:
-        name:
-          - build-essential
-          - git
-          - make
-          - gcc
-          - ninja-build
-          - gettext
-          - libtool
-          - libtool-bin
-          - autoconf
-          - automake
-          - cmake
-          - g++
-          - pkg-config
-          - unzip
-          - curl
-          - doxygen
+- name: neovim | Install dependencies for build
+  tags: nvim
+  become: true
+  apt:
+    name:
+      - build-essential
+      - git
+      - make
+      - gcc
+      - ninja-build
+      - gettext
+      - libtool
+      - libtool-bin
+      - autoconf
+      - automake
+      - cmake
+      - g++
+      - pkg-config
+      - unzip
+      - curl
+      - doxygen
+  when: "(not nvim_binary.stat.exists or nvim_version is not defined or nvim_version.stdout != nvim_expected_version) and ansible_distribution in ['Debian', 'Ubuntu']"
 
+- block:
     - name: neovim | Pull neovim repository
       git:
         repo: 'https://github.com/neovim/neovim.git'
