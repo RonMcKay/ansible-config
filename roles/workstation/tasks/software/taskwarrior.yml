@@ -8,7 +8,7 @@
 
 - name: taskwarrior | Check taskwarrior version
   tags: tw
-  shell: 'task --version'
+  shell: '{{ tw_path }} --version'
   register: tw_version
   when: tw_binary.stat.exists
   changed_when: false
