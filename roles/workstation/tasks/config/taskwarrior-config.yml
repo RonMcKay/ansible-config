@@ -1,7 +1,7 @@
 ---
 - include_vars: taskwarrior_vars.yml
 
-- name: "vit | Ensure '/home/<config_user>/.vit' exists"
+- name: "vit | Ensure '.vit' folder exists"
   tags: tw,vit
   file:
     path: "/home/{{ config_user }}/.vit"
