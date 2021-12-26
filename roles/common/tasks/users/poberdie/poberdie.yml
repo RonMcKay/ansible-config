@@ -85,6 +85,9 @@
             group: "{{ user_group if user_group is defined else (getent_passwd.get('poberdie')[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else 'poberdie') }}"
             mode: 0755
           loop:
+            - '/home/poberdie/.config/nvim/after/ftplugin'
+            - '/home/poberdie/.config/nvim/ftplugin'
+            - '/home/poberdie/.config/nvim/plugins'
             - '/home/poberdie/.vim/after/ftplugin'
             - '/home/poberdie/.vim/autoload'
 
@@ -98,17 +101,9 @@
             mode: 0644
           loop:
             - { src: 'users/poberdie/vim/vimrc', dest: '/home/poberdie/.vimrc' }
-            - { src: 'users/poberdie/vim/after/ftplugin/vim.vim', dest: '/home/poberdie/.vim/after/ftplugin/vim.vim' }
-            - { src: 'users/poberdie/vim/after/ftplugin/vimwiki.vim', dest: '/home/poberdie/.vim/after/ftplugin/vimwiki.vim' }
-            - { src: 'users/poberdie/vim/after/ftplugin/yaml.vim', dest: '/home/poberdie/.vim/after/ftplugin/yaml.vim' }
+            - { src: 'users/poberdie/vim/after', dest: '/home/poberdie/.vim/after' }
+            - { src: 'users/poberdie/vim/ftplugin', dest: '/home/poberdie/.vim/ftplugin'}
 
-        - name: poberdie | vim | Install PlugInstall
-          get_url:
-            url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-            dest: /home/poberdie/.vim/autoload/plug.vim
-            owner: poberdie
-            group: "{{ user_group if user_group is defined else (getent_passwd.get('poberdie')[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else 'poberdie') }}"
-            mode: 0644
 
         - name: poberdie | vim | Clean vim plugins
           shell: vim +'silent! PlugClean!' +qa

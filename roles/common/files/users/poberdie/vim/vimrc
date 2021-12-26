@@ -11,9 +11,7 @@
 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" SETTINGS ----------------------------------------------------------------- {{{
-
-" STANDARD ----------------------------------------------------------------- {{{
+" General Settings --------------------------------------------------------- {{{
 
 set guicursor=
 set cursorcolumn
@@ -72,59 +70,17 @@ colo default
 
 " }}}
 
-" VIMWIKI ------------------------------------------------------------------ {{{
-
-let wiki_1 = {
-    \ 'path': '~/wiki_work',
-    \ 'syntax': 'markdown',
-    \ 'ext': '.md',
-    \ 'auto_tags': 1,
-    \ 'auto_toc': 1,
-    \ 'template_path': '~/wiki_work/html_templates',
-    \ 'template_default': 'default',
-    \ 'path_html': '~/wiki_work/site_html/',
-    \ 'custom_wiki2html': 'vimwiki_markdown',
-    \ 'template_ext': '.tpl'}
-let wiki_2 = {
-    \ 'path': '~/wiki_private',
-    \ 'syntax': 'markdown',
-    \ 'ext': '.md',
-    \ 'auto_tags': 1,
-    \ 'auto_toc': 1,
-    \ 'template_path': '~/wiki_private/html_templates',
-    \ 'template_default': 'default',
-    \ 'path_html': '~/wiki_private/site_html/',
-    \ 'custom_wiki2html': 'vimwiki_markdown',
-    \ 'template_ext': '.tpl'}
-
-let g:vimwiki_list = [wiki_1, wiki_2]
-let g:vimwiki_global_ext = 0
-let g:vimwiki_folding = 'custom'
-set foldlevel=30
-
-" }}}
-
-" }}}
-
-" PLUGINS ------------------------------------------------------------------ {{{
-
-silent! call plug#begin('~/.vim/plugged')
-Plug 'RonMcKay/vimwiki', { 'branch' : 'improve-tag-links-generation' }
-Plug 'tpope/vim-surround'
-Plug 'gruvbox-community/gruvbox'
-Plug 'kien/rainbow_parentheses.vim'
-Plug 'jremmen/vim-ripgrep'
-Plug 'junegunn/fzf', { 'do': 'yes \| ./install --key-bindings --completion --no-update-rc'}
-Plug 'junegunn/fzf.vim'
-call plug#end()
-
-" }}}
-
-" MAPPINGS ----------------------------------------------------------------- {{{
+" Key Mappings ------------------------------------------------------------- {{{
 
 " Map leader to space
 nnoremap <SPACE> <Nop>
-let mapleader=" "
+let mapleader = "\<SPACE>"
+
+nmap <leader>ve :edit ~/.config/nvim/init.vim<CR>
+nmap <leader>vr :source ~/.config/nvim/init.vim<CR>
+
+" Map <Esc> to jj
+inoremap jj <Esc>
 
 " Easier navigation in splits
 nnoremap <C-J> <C-W><C-J>
@@ -132,49 +88,87 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-" Search for match in files recursively
-nnoremap <leader>rr :Rg<CR>
-
-" Search for files using fzf
-nnoremap <leader>ff :Files<CR>
-
-" horizontal seperator:
-nnoremap <leader>hl o<Enter><Esc>10i-<Esc>o
-
 " Create new tab with Ctrl-t
 nnoremap <C-t> :tabnew<CR>
 
-" Create a vimwiki table
-nnoremap <leader>at :VimwikiTable
-
-" 'move-column-left/right' (mcl/r) in a Vimwiki Table
-nnoremap <leader>mcl :VimwikiTableMoveColumnLeft<CR>
-nnoremap <leader>mcr :VimwikiTableMoveColumnRight<CR>
-
-" Generate vimwiki tag links and reload saved view of the file
-nnoremap <leader>tl :CustomVimwikiGenerateTagLinks<Space>
-
-" Clear markdown links
-nnoremap <leader>cl f]f(ci)
-
-" Open markdown file in default viewer
-nnoremap <leader>mv :!open %<CR>
-
-" Map <Esc> to jj
-inoremap jj <Esc>
+" Open file in default viewer
+nmap <leader>x :!xdg-open %<CR><CR>
 
 " Map omnicomplete to Ctrl-k
 inoremap <C-k> <C-x><C-o>
 
-" Map fzf line completion to Ctrl-f
-inoremap <C-f> <plug>(fzf-complete-line)
+" }}}
 
-" Format selected text with double stars
-vmap <leader>fb <S-s>*gv<S-s>*
+" PLUGINS ------------------------------------------------------------------ {{{
+
+" Automatically install vim-plug
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+call plug#begin(data_dir . '/plugins')
+
+source ~/.config/nvim/plugins/vimwiki.vim
+source ~/.config/nvim/plugins/surround.vim
+source ~/.config/nvim/plugins/gruvbox.vim
+source ~/.config/nvim/plugins/rainbow_parantheses.vim
+source ~/.config/nvim/plugins/ripgrep.vim
+source ~/.config/nvim/plugins/fzf.vim
+
+call plug#end()
+doautocmd User PlugLoaded
 
 " }}}
 
-" FUNCTIONS ---------------------------------------------------------------- {{{
+" AUTO-COMMANDS ------------------------------------------------------------ {{{
+
+augroup filetype_vim
+    autocmd!
+    autocmd FileType vim setlocal foldmethod=marker
+augroup END
+
+" Display cursorline and cursorcolumn ONLY in active window.
+augroup cursor_off
+    autocmd!
+    autocmd WinLeave * set nocursorline nocursorcolumn
+    autocmd WinEnter * set cursorline cursorcolumn
+augroup END
+
+augroup General
+    " The following by the way removes all autocmds that are *within* this
+    " Group when sourcing the config
+    autocmd!
+    autocmd BufWritePre *.* :call TrimWhitespace()
+    autocmd BufWinLeave,BufWrite *.* mkview
+    autocmd BufWinEnter *.* silent! loadview
+    autocmd BufNewFile,BufRead */ansible-config/* if &ft == '' | set filetype=dosini | endif
+    " au VimEnter * RainbowParenthesesToggle
+    " au Syntax * RainbowParenthesesLoadRound
+    " au Syntax * RainbowParenthesesLoadSquare
+    " au Syntax * RainbowParenthesesLoadBraces
+augroup end
+
+augroup git
+    autocmd!
+
+    " Start git commits in append mode and wrap lines at 72 characters
+    autocmd Filetype gitcommit setlocal spell textwidth=72 | startinsert!
+augroup end
+
+let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to your mount point
+if executable(s:clip)
+    augroup WSLYank
+        autocmd!
+        " When yanking in WSL on Windows, copy the yanked text to the clipboard
+        autocmd TextYankPost * if v:event.operator ==# 'y' | call system(s:clip, @0) | endif
+    augroup END
+endif
+
+" }}}
+
+" Scripting ---------------------------------------------------------------- {{{
 
 fun! TrimWhitespace()
     if match(expand('%'), ".*\.md") == -1
@@ -199,123 +193,5 @@ function! MyDeleteView()
     call delete(path)
     echo "Deleted: ".path
 endfunction
-
-function! VimwikiFoldLevelCustom(lnum)
-  let pounds = strlen(matchstr(getline(a:lnum), '^#\+'))
-  if (pounds)
-    return '>' . pounds  " start a fold level
-  endif
-  if getline(a:lnum) =~? '^\s*$'
-    if (strlen(matchstr(getline(a:lnum + 1), '^#\+')))
-      return '-1' " don't fold last blank line before header
-    endif
-  endif
-  return '=' " return previous fold level
-endfunction
-
-" }}}
-
-" VIMSCRIPT ---------------------------------------------------------------- {{{
-
-if has('gui')
-    silent! colorscheme gruvbox
-    silent! set background=dark
-endif
-
-" }}}
-
-" COMMANDS ----------------------------------------------------------------- {{{
-
-" # Command Delview (and it's abbreviation 'delview')
-command Delview call MyDeleteView()
-" Lower-case user commands: http://vim.wikia.com/wiki/Replace_a_builtin_command_using_cabbrev
-cabbrev delview <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'Delview' : 'delview')<CR>
-
-command! -bang -nargs=* Rg call fzf#vim#grep('rg --hidden --column --line-number --no-heading --color=always --smart-case --glob "!.git/*" --glob "!venv/*" -- ' .shellescape(<q-args>), 1, fzf#vim#with_preview(), <bang>0)
-
-" }}}
-
-" AUTO-COMMANDS ------------------------------------------------------------ {{{
-
-" This will enable code folding.
-" Use the marker method of folding.
-augroup filetype_vim
-    autocmd!
-    autocmd FileType vim setlocal foldmethod=marker
-augroup END
-
-" You can split a window into sections by typing `:split` or `:vsplit`.
-" Display cursorline and cursorcolumn ONLY in active window.
-augroup cursor_off
-    autocmd!
-    autocmd WinLeave * set nocursorline nocursorcolumn
-    autocmd WinEnter * set cursorline cursorcolumn
-augroup END
-
-augroup General
-    " The following by the way removes all autocmds that are *within* this
-    " Group when sourcing the config
-    autocmd!
-    autocmd BufWritePre *.* :call TrimWhitespace()
-    autocmd BufWinLeave,BufWrite *.* mkview
-    autocmd BufWinEnter *.* silent! loadview
-    autocmd BufNewFile,BufRead */ansible-config/* if &ft == '' | set filetype=dosini | endif
-    " au VimEnter * RainbowParenthesesToggle
-    " au Syntax * RainbowParenthesesLoadRound
-    " au Syntax * RainbowParenthesesLoadSquare
-    " au Syntax * RainbowParenthesesLoadBraces
-augroup end
-
-augroup vimwikigroup
-	autocmd!
-	" automatically update links on read diary
-	autocmd BufRead,BufNewFile,BufWinEnter diary.md VimwikiDiaryGenerateLinks
-
-    " When opening a new diary day, run the template script and paste it in
-    autocmd BufNewFile ~/wiki_*/diary/*.md silent 0r
-        \ !~/configs/vim/diary_template.py '%'
-
-    " Start new diary day in append mode in the header
-    autocmd BufNewFile ~/wiki_*/diary/*.md exec 'norm gg' | startinsert!
-
-    " Enable folding for vimwiki (markdown) files
-    autocmd FileType vimwiki setlocal foldmethod=expr |
-        \ setlocal foldenable | setlocal foldexpr=VimwikiFoldLevelCustom(v:lnum)
-augroup end
-
-augroup git
-    autocmd!
-
-    " Start git commits in append mode and wrap lines at 72 characters
-    autocmd Filetype gitcommit setlocal spell textwidth=72 | startinsert!
-augroup end
-
-let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to your mount point
-if executable(s:clip)
-    augroup WSLYank
-        autocmd!
-        " When yanking in WSL on Windows, copy the yanked text to the clipboard
-        autocmd TextYankPost * if v:event.operator ==# 'y' | call system(s:clip, @0) | endif
-    augroup END
-endif
-
-" }}}
-
-" STATUS LINE -------------------------------------------------------------- {{{
-
-" Clear status line when vimrc is reloaded.
-set statusline=
-
-" Status line left side.
-set statusline+=\ %F\ %M\ %Y\ %R
-
-" Use a divider to separate the left side from the right side.
-set statusline+=%=
-
-" Status line right side.
-set statusline+=\ ascii:\ %b\ hex:\ 0x%B\ row:\ %l\ col:\ %c\ percent:\ %p%%
-
-" Show the status on the second to last line.
-set laststatus=2
 
 " }}}
