@@ -25,10 +25,10 @@
     wd = diff --word-diff=color
 [commit]
 	template = ~/.gitmessage
-    gpgSign = {{ 'true' if private else 'false' }}
+    gpgSign = {{ 'true' if 'workstations' in group_names else 'false' }}
 [color]
 	ui = true
 [tag]
-    gpgSign = {{ 'true' if private else 'false' }}
+    gpgSign = {{ 'true' if 'workstations' in group_names else 'false' }}
 [gpg]
     program = gpg
