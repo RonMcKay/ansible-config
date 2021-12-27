@@ -48,7 +48,7 @@ alias follow='tail -f -n 100'
 alias fcount='ls -1 | wc -l'
 
 # Programs
-alias updateconfig='ansible-pull -K -l $(hostname) -U https://github.com/ronmckay/ansible-config'
+alias updateconfig='ansible-pull -K -l $(hostname) --vault-password-file=~/.vault-password -U https://github.com/ronmckay/ansible-config local.yml'
 alias nv='nvim'
 alias vw='nvim $HOME/wiki_{{ 'private' if private else 'work' }}/index.md'
 alias ltx='latexmk'
