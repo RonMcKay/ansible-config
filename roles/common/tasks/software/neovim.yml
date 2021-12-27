@@ -2,12 +2,12 @@
 - name: neovim | Check if neovim is installed
   tags: nvim
   stat:
-    path: "{{ nvim_path if nvim_install_user is not defined else '/home/' + nvim_install_user + '/.local/neovim' }}"
+    path: "{{ nvim_path if nvim_install_user is not defined else '/home/' + nvim_install_user + '/.local/neovim/bin/nvim' }}"
   register: nvim_binary
 
 - name: neovim | Check neovim version
   tags: nvim
-  shell: "{{ nvim_path if nvim_install_user is not defined else '/home/' + nvim_install_user + '/.local/neovim' }} --version | head -n 1 | awk -F ' ' '{print $2}'"
+  shell: "{{ nvim_path if nvim_install_user is not defined else '/home/' + nvim_install_user + '/.local/neovim/bin/nvim' }} --version | head -n 1 | awk -F ' ' '{print $2}'"
   register: nvim_version
   when: nvim_binary.stat.exists
   changed_when: false
