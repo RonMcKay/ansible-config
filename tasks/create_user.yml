@@ -10,6 +10,6 @@
     append: yes
     groups: "{{ user_groups if user_groups is defined else (getent_passwd.get('poberdie')[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else 'poberdie') }}"
     system: "{{ is_system_user | default('no') }}"
-    password: "{{ default_password }}"
+    password: "{{ default_password | string | password_hash('sha512') }}"
     update_password: "on_create"
   when: ansible_distribution in ["Debian", "Ubuntu"]
