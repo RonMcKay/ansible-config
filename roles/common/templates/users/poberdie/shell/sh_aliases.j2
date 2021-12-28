@@ -49,7 +49,7 @@ alias fcount='ls -1 | wc -l'
 
 # Programs
 alias updateconfig='ansible-pull -K -l $(hostname) --vault-password-file=~/.vault-password -U https://github.com/ronmckay/ansible-config local.yml'
-alias nv='nvim'
+alias view='nvim -R'
 alias vw='nvim $HOME/wiki_{{ 'private' if private else 'work' }}/index.md'
 alias ltx='latexmk'
 alias open={{ "'wslview'" if in_wsl else "'xdg-open'" }}
