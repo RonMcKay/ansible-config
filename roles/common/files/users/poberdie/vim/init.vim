@@ -17,7 +17,7 @@ set tabstop=4
 set softtabstop=4
 set scrolloff=8
 set backup
-set backupdir=~/.local/share/nvim/backup//
+set backupdir=~/.local/share/nvim/backup/
 set relativenumber
 set number
 set hidden
@@ -27,6 +27,7 @@ set ignorecase
 set smartcase
 set conceallevel=2
 set nowrap
+set noswapfile
 set cursorcolumn
 set cursorline
 set colorcolumn=80
