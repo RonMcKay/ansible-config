@@ -1,11 +1,11 @@
 # {{ ansible_managed }}
 
-if [ -f ~/.sh_aliases ]; then
-    source ~/.sh_aliases
-fi
-
 if [ -f ~/.sh_environment ]; then
     source ~/.sh_environment
+fi
+
+if [ -f ~/.sh_aliases ]; then
+    source ~/.sh_aliases
 fi
 
 if [[ "$SHELL" == */bash ]] && [[ -f ~/.fzf.bash ]]; then
