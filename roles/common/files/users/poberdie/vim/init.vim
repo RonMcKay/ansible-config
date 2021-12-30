@@ -16,6 +16,7 @@ set shiftwidth=4
 set tabstop=4
 set softtabstop=4
 set scrolloff=8
+set sidescrolloff=30
 set backup
 set backupdir=~/.local/share/nvim/backup/
 set relativenumber
@@ -45,6 +46,10 @@ nmap <leader>vr :source ~/.config/nvim/init.vim<CR>
 
 " Map <Esc> to jj
 inoremap jj <Esc>
+
+" Easier splitting
+nnoremap <leader>hh :split<CR>
+nnoremap <leader>vv :vsplit<CR>
 
 " Easier navigation in splits
 nnoremap <C-J> <C-W><C-J>
