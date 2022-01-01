@@ -1,9 +1,9 @@
 ---
-- name: Install git
+- name: Install ripgrep
   become: yes
   package:
-    name: git
+    name: ripgrep
     state: latest
     update_cache: yes
   when: ansible_distribution in ["Debian", "Ubuntu"]
-  tags: utilities,git
+  tags: utilities,rg
