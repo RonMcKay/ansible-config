@@ -33,6 +33,7 @@ set cursorcolumn
 set cursorline
 set colorcolumn=80
 set autochdir
+set autoread
 
 " }}}
 
@@ -90,7 +91,6 @@ call plug#begin(data_dir . '/plugins')
 source ~/.config/nvim/plugins/vimwiki.vim
 source ~/.config/nvim/plugins/surround.vim
 source ~/.config/nvim/plugins/gruvbox.vim
-source ~/.config/nvim/plugins/rainbow_parantheses.vim
 source ~/.config/nvim/plugins/ripgrep.vim
 source ~/.config/nvim/plugins/fzf.vim
 source ~/.config/nvim/plugins/floaterm.vim
@@ -122,10 +122,6 @@ augroup General
     autocmd BufWinLeave,BufWrite *.* mkview
     autocmd BufWinEnter *.* silent! loadview
     autocmd BufNewFile,BufRead */ansible-config/* if &ft == '' | set filetype=dosini | endif
-    au VimEnter * RainbowParenthesesToggle
-    au Syntax * RainbowParenthesesLoadRound
-    au Syntax * RainbowParenthesesLoadSquare
-    au Syntax * RainbowParenthesesLoadBraces
 augroup end
 
 augroup git
