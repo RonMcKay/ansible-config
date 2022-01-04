@@ -50,6 +50,10 @@ inoremap jj <Esc>
 " List current buffers
 nnoremap <leader>b :Buffers<CR>
 
+" Easier navigation in tabs
+nnoremap <S-L> :tabnext<CR>
+nnoremap <S-H> :tabprevious<CR>
+
 " Easier splitting
 nnoremap <leader>hh :split<CR>
 nnoremap <leader>vv :vsplit<CR>
