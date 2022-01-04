@@ -92,6 +92,7 @@ source ~/.config/nvim/plugins/gruvbox.vim
 source ~/.config/nvim/plugins/rainbow_parantheses.vim
 source ~/.config/nvim/plugins/ripgrep.vim
 source ~/.config/nvim/plugins/fzf.vim
+source ~/.config/nvim/plugins/floaterm.vim
 
 call plug#end()
 doautocmd User PlugLoaded
