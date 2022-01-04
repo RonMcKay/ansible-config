@@ -47,6 +47,9 @@ nmap <leader>vr :source ~/.config/nvim/init.vim<CR>
 " Map <Esc> to jj
 inoremap jj <Esc>
 
+" List current buffers
+nnoremap <leader>b :Buffers<CR>
+
 " Easier splitting
 nnoremap <leader>hh :split<CR>
 nnoremap <leader>vv :vsplit<CR>
