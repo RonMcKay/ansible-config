@@ -120,10 +120,10 @@ augroup General
     autocmd BufWinLeave,BufWrite *.* mkview
     autocmd BufWinEnter *.* silent! loadview
     autocmd BufNewFile,BufRead */ansible-config/* if &ft == '' | set filetype=dosini | endif
-    " au VimEnter * RainbowParenthesesToggle
-    " au Syntax * RainbowParenthesesLoadRound
-    " au Syntax * RainbowParenthesesLoadSquare
-    " au Syntax * RainbowParenthesesLoadBraces
+    au VimEnter * RainbowParenthesesToggle
+    au Syntax * RainbowParenthesesLoadRound
+    au Syntax * RainbowParenthesesLoadSquare
+    au Syntax * RainbowParenthesesLoadBraces
 augroup end
 
 augroup git
