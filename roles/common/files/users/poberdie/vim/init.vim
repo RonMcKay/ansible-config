@@ -27,7 +27,7 @@ set nospell
 set ignorecase
 set smartcase
 set conceallevel=2
-set nowrap
+set wrap
 set noswapfile
 set cursorcolumn
 set cursorline
