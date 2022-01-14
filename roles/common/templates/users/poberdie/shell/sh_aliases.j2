@@ -55,6 +55,9 @@ if [ -x "$(command -v nvim)" ]; then
     alias view='nvim -R'
 fi
 
+{% if private %}
+alias hl='hledger'
+{% endif %}
 alias vw='vim $HOME/wiki_{{ 'private' if private else 'work' }}/index.md'
 alias ltx='latexmk'
 alias open={{ "'wslview'" if in_wsl else "'xdg-open'" }}
