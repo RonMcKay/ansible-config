@@ -16,6 +16,9 @@ nnoremap <leader>cl f]f(ci)
 " Format selected text with double stars
 vmap <leader>fb <S-s>*gv<S-s>*
 
+" Horizontal seperator
+nnoremap <leader>hl o<CR><Esc>10i-<Esc>o
+
 function! VimwikiFoldLevelCustom(lnum)
   let pounds = strlen(matchstr(getline(a:lnum), '^#\+'))
   if (pounds)
