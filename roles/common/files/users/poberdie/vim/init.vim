@@ -94,6 +94,8 @@ source ~/.config/nvim/plugins/gruvbox.vim
 source ~/.config/nvim/plugins/ripgrep.vim
 source ~/.config/nvim/plugins/fzf.vim
 source ~/.config/nvim/plugins/floaterm.vim
+source ~/.config/nvim/plugins/ledger.vim
+source ~/.config/nvim/plugins/snippets.vim
 
 call plug#end()
 doautocmd User PlugLoaded
