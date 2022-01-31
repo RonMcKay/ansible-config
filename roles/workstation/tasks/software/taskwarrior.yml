@@ -8,8 +8,8 @@
 
 - name: taskwarrior | Check taskwarrior version
   tags: tw
-  shell: '{{ tw_path }} --version'
-  register: tw_version
+  shell: '{{ tw_path }} _version | sed "s/.*(\([^)]*\)).*/\1/g"'
+  register: tw_commit_id
   when: tw_binary.stat.exists
   changed_when: false
   failed_when: false
@@ -31,7 +31,7 @@
         repo: 'https://github.com/GothenburgBitFactory/taskwarrior.git'
         dest: '/tmp/ansible-pull-taskwarrior'
         depth: 1
-        version: "{{ tw_tag_name }}"
+        version: "{{ tw_expected_commit_id }}"
 
     - name: taskwarrior | Run cmake
       shell:
@@ -53,6 +53,6 @@
         path: '/tmp/ansible-pull-taskwarrior/'
         state: absent
 
-  when: "(not tw_binary.stat.exists or tw_version is not defined or tw_version.stdout != tw_expected_version) and ansible_distribution in ['Debian', 'Ubuntu']"
+  when: "(not tw_binary.stat.exists or tw_commit_id is not defined or tw_commit_id.stdout != tw_expected_commit_id) and ansible_distribution in ['Debian', 'Ubuntu']"
   tags: tw
   become: true
