@@ -19,4 +19,4 @@ if [[ ! -f ~/.vault-password ]]; then
     echo "$VAULT_PASS" > ~/.vault-password
 fi
 
-ansible-pull -U https://github.com/ronmckay/ansible-config --vault-password-file=~/.vault-password local.yml
+ansible-pull -U https://github.com/ronmckay/ansible-config --checkout main --vault-password-file=~/.vault-password local.yml
