@@ -8,7 +8,7 @@
 
 - name: taskwarrior | Check taskwarrior version
   tags: tw
-  shell: '{{ tw_path }} _version | sed "s/.*(\([^)]*\)).*/\1/g"'
+  shell: 'echo "yes" | {{ tw_path }} _version | sed "s/.*(\([^)]*\)).*/\1/g"'
   register: tw_commit_id
   when: tw_binary.stat.exists
   changed_when: false
