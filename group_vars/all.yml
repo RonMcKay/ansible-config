@@ -10,6 +10,7 @@ default_password: !vault |
           6662646266633838386134353239616338393238626164336132
 patrec_machines:
   - allen
+  - apollo
   - ares
   - bay
   - gaia
