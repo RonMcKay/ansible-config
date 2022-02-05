@@ -75,6 +75,10 @@
     - name: poberdie | tmux | Configure tmux
       include_tasks: config/tmux-config.yml
 
+    # Configure wsl2-ssh-pageant.exe
+    - name: poberdie | ssh | Configure wsl2-ssh-pageant.exe
+      include_tasks: config/wsl2-ssh-pageant.yml
+
     # Vim config and plugins
     - block:
         - name: poberdie | vim/neovim | Ensure necessary directories exist

@@ -1,0 +1,19 @@
+---
+- block:
+    - name: ssh | Install dependencies for wsl2-ssh-pageant.exe
+      apt:
+        name: socat, iproute2
+        state: present
+      when: ansible_distribution in ["Debian", "Ubuntu"]
+
+    - name: ssh | Download wsl2-ssh-pageant.exe into .ssh folder
+      get_url:
+        url: https://github.com/BlackReloaded/wsl2-ssh-pageant/releases/latest/download/wsl2-ssh-pageant.exe
+        dest: '$HOME/.ssh/wsl2-ssh-pageant.exe'
+        mode: 0755
+        owner: "{{ config_user }}"
+        group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
+      become_user: "{{ config_user }}"
+  become: true
+  tags: ssh
+  when: in_wsl
