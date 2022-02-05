@@ -2,7 +2,7 @@
 - block:
     - name: synth-shell | Check if synth-shell is already installed
       stat:
-        path: "/home/{{ config_user }}/.config/synth-shell"
+        path: "$HOME/.config/synth-shell"
       register: synth_shell
 
     # Install synth-shell if not existend
@@ -59,7 +59,7 @@
     - name: synth-shell | Copy synth-shell config file
       copy:
         src: "synth-shell-prompt.config"
-        dest: "/home/{{ config_user }}/.config/synth-shell/synth-shell-prompt.config"
+        dest: "$HOME/.config/synth-shell/synth-shell-prompt.config"
         owner: "{{ config_user }}"
         group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
         mode: 0644

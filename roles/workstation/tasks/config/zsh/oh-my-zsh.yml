@@ -2,7 +2,7 @@
 - block:
     - name: "zsh | Check if oh-my-zsh already installed"
       stat:
-        path: "/home/{{ config_user }}/.oh-my-zsh"
+        path: "$HOME/.oh-my-zsh"
       register: omz
 
     # Install oh-my-zsh if not already installed

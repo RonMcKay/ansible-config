@@ -1,66 +1,67 @@
 ---
 - include_vars: taskwarrior_vars.yml
 
-- name: "vit | Ensure '.vit' folder exists"
-  tags: tw,vit
-  file:
-    path: "/home/{{ config_user }}/.vit"
-    state: directory
-    mode: 0755
-    owner: "{{ config_user }}"
-    group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
+- block:
+    - name: "vit | Ensure '.vit' folder exists"
+      file:
+        path: "$HOME/.vit"
+        state: directory
+        mode: 0755
+        owner: "{{ config_user }}"
+        group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
 
-- name: "vit | Copy vit configuration template"
-  tags: tw,vit
-  template:
-    src: "taskwarrior/vit-config.ini.j2"
-    dest: "/home/{{ config_user }}/.vit/config.ini"
-    owner: "{{ config_user }}"
-    group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
-    mode: 0644
+    - name: "vit | Copy vit configuration template"
+      template:
+        src: "taskwarrior/vit-config.ini.j2"
+        dest: "$HOME/.vit/config.ini"
+        owner: "{{ config_user }}"
+        group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
+        mode: 0644
+  tags: vit,tw
+  become: true
+  become_user: "{{ config_user }}"
 
-- name: "tw | Ensure '/home/{{ config_user }}/.task' exists"
-  tags: tw
-  file:
-    path: "/home/{{ config_user }}/.task"
-    state: directory
-    mode: 0700
-    owner: "{{ config_user }}"
-    group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
+- block:
+    - name: "tw | Ensure '$HOME/.task' exists"
+      file:
+        path: "$HOME/.task"
+        state: directory
+        mode: 0700
+        owner: "{{ config_user }}"
+        group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
 
-- name: "tw | Copy taskwarrior files"
-  tags: tw
-  copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    owner: "{{ config_user }}"
-    group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
-    mode: 0600
-  loop:
-    - { src: "taskwarrior/ca.cert.pem", dest: "/home/{{ config_user }}/.task/ca.cert.pem" }
-    - { src: "taskwarrior/philipp_oberdiek.cert.pem", dest: "/home/{{ config_user }}/.task/philipp_oberdiek.cert.pem" }
-    - { src: "taskwarrior/philipp_oberdiek.key.pem", dest: "/home/{{ config_user }}/.task/philipp_oberdiek.key.pem" }
-    - { src: "taskwarrior/hooks", dest: "/home/{{ config_user }}/.task/hooks" }
-    - { src: "taskwarrior/dark-gray-blue-256.theme", dest: "/home/{{ config_user }}/.task/dark-gray-blue-256.theme" }
+    - name: "tw | Copy taskwarrior files"
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: "{{ config_user }}"
+        group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
+        mode: 0600
+      loop:
+        - { src: "taskwarrior/ca.cert.pem", dest: "$HOME/.task/ca.cert.pem" }
+        - { src: "taskwarrior/philipp_oberdiek.cert.pem", dest: "$HOME/.task/philipp_oberdiek.cert.pem" }
+        - { src: "taskwarrior/philipp_oberdiek.key.pem", dest: "$HOME/.task/philipp_oberdiek.key.pem" }
+        - { src: "taskwarrior/hooks", dest: "$HOME/.task/hooks" }
+        - { src: "taskwarrior/dark-gray-blue-256.theme", dest: "$HOME/.task/dark-gray-blue-256.theme" }
 
-- name: "tw | Copy .taskrc template"
-  tags: tw
-  template:
-    src: "taskwarrior/taskrc.j2"
-    dest: "/home/{{ config_user }}/.taskrc"
-    owner: "{{ config_user }}"
-    group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
-    mode: 0600
+    - name: "tw | Copy .taskrc template"
+      template:
+        src: "taskwarrior/taskrc.j2"
+        dest: "$HOME/.taskrc"
+        owner: "{{ config_user }}"
+        group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
+        mode: 0600
 
-- name: "tw | Sync with taskd server"
-  command: "task sync"
+    - name: "tw | Sync with taskd server"
+      command: "task sync"
+      changed_when: false
+
+    - name: "tw | Install python-dateutil for taskwarrior hooks"
+      pip:
+        name: python-dateutil
+        state: latest
+        umask: '0022'
+
   become_user: "{{ config_user }}"
   become: true
-  changed_when: false
-
-- name: "tw | Install python-dateutil for taskwarrior hooks"
   tags: tw
-  pip:
-    name: python-dateutil
-    state: latest
-    umask: '0022'
