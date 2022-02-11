@@ -6,6 +6,7 @@
 - include_tasks: software/taskwarrior.yml
 - include_tasks: software/vit.yml
 - include_tasks: software/syncthing.yml
+- include_tasks: software/beancount.yml
 
 # Apply user configuration
 - include_tasks: users/poberdie.yml

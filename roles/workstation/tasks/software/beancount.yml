@@ -1,0 +1,7 @@
+---
+- name: Install beancount
+  pip:
+    name: beancount
+    state: present
+  become: true
+  when: private and ansible_distribution in ["Debian", "Ubuntu"]
