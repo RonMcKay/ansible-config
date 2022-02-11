@@ -33,7 +33,8 @@ export PATH=$PATH:/usr/bin/nodejs/bin  # NodeJS for omniboard (sacred)
 {% endif %}
 {% if in_wsl %}
 export PATH=$PATH:$SYSTEM32
-export PATH=$PATH:"/mnt/c/Users/Philipp Oberdiek/AppData/Local/Programs/Microsoft VS Code/bin"
+export PATH=$PATH:"/mnt/c/Users/{{ windows_username | default('Philipp Oberdiek') }}/AppData/Local/Programs/Microsoft VS Code/bin"
+export PATH=$PATH:"/mnt/c/Program Files/Microsoft VS Code/bin"
 {% endif %}
 
 {% if 'patrec' in group_names %}
