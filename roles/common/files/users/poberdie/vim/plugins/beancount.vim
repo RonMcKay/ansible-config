@@ -2,7 +2,7 @@ Plug 'nathangrigg/vim-beancount'
 
 augroup filetype_beancount
     autocmd!
-    autocmd FileType beancount set foldmethod=syntax
+    autocmd FileType beancount setlocal foldmethod=marker
     autocmd FileType beancount nnoremap <buffer> { :call PreviousTransaction()<CR>
     autocmd FileType beancount nnoremap <buffer> } :call NextTransaction()<CR>
     autocmd FileType beancount nnoremap <buffer> <leader>aa :AlignCommodity<CR>
