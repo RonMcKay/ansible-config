@@ -75,6 +75,14 @@ nmap <leader>x :!xdg-open %<CR><CR>
 " Map omnicomplete to Ctrl-k
 inoremap <C-k> <C-x><C-o>
 
+" Fold opening/closing
+inoremap <F10> <C-O>za
+nnoremap <F10> za
+
+" Open fold and jump to the start/end
+nmap z] zo]z
+nmap z[ zo[z
+
 " }}}
 
 " PLUGINS ------------------------------------------------------------------ {{{
