@@ -1,6 +1,7 @@
 ---
 - block:
     - name: ssh | Install dependencies for wsl2-ssh-pageant.exe
+      become_user: root
       apt:
         name: socat, iproute2
         state: present
