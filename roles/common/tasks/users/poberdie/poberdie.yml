@@ -95,7 +95,7 @@
             - '/home/poberdie/.vim/after/ftplugin'
             - '/home/poberdie/.vim/autoload'
 
-        - name: poberdie | vim/neovim | Copy vimrr, init.vim and all config directories
+        - name: poberdie | vim/neovim | Copy vimrc, init.vim and all config directories
           tags: dotfiles
           copy:
             src: "{{ item.src }}"
