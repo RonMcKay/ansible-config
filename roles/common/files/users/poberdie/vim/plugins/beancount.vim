@@ -8,6 +8,7 @@ augroup filetype_beancount
     autocmd FileType beancount nnoremap <buffer> <leader>aa :AlignCommodity<CR>
     autocmd FileType beancount vnoremap <buffer> <leader>aa :AlignCommodity<CR>
     autocmd FileType beancount inoremap <buffer> . .<C-\><C-O>:AlignCommodity<CR>
+    autocmd FileType beancount setlocal shiftwidth=2 tabstop=2
 augroup END
 
 function NextTransaction()
