@@ -20,3 +20,11 @@
     - autopep8
   loop_control:
     loop_var: pkg_name
+
+- name: "python-dev | Copy isort config"
+  become_user: "{{ config_user }}"
+  become: true
+  copy:
+    src: "isort.cfg"
+    dest: "~/.isort.cfg"
+    mode: 0644
