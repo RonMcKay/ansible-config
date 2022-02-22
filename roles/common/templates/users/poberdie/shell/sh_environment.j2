@@ -43,8 +43,9 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/vol/local/install/cuda-11.0_debian10/li
 export LIBRARY_PATH=$LIBRARY_PATH:/vol/local/install/cuda-11.0_debian10/lib64
 
 {% endif %}
-{% if 'workstations' in group_names %}
 # Miscellaneous
+export EDITOR=nvim
+{% if 'workstations' in group_names %}
 export LATEXMKRCSYS=$HOME/.latexmkrc
 export OMNIBOARD_CONFIG=$HOME/.omniboard_config.json  # Path to omniboard configuration file
 {% endif %}
