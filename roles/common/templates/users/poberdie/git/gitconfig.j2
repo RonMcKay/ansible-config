@@ -22,7 +22,7 @@
     spu = stash push
 	st = status
     sum = shortlog --summary --numbered --all --no-merges --email
-    wd = diff --word-diff=color
+    wd = diff --color-words="[^[:space:]]|([[:alnum:]]|UTF_8_GUARD)+"
 [commit]
 	template = ~/.gitmessage
     gpgSign = {{ 'true' if 'workstations' in group_names else 'false' }}
