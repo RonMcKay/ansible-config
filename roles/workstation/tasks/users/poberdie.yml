@@ -12,6 +12,7 @@
     name: "syncthing@poberdie"
     state: restarted
   when: (syncthing_service.changed | default(false) or syncthing_install.changed | default(false)) and ansible_distribution in ["Debian", "Ubuntu"] and not in_wsl
+  become: true
 
 - name: poberdie | Ensure syncthing service is running
   systemd:
