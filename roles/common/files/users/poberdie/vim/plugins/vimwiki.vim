@@ -16,6 +16,9 @@ nnoremap <leader>cl f]f(ci)
 " Format selected text with double stars
 vmap <leader>fb <S-s>*gv<S-s>*
 
+" Insert Code block
+nnoremap <leader>cb 3i`<Esc>o<CR><Esc>3i`<Esc>ki
+
 " Horizontal seperator
 nnoremap <leader>hl o<CR><Esc>10i-<Esc>o
 
