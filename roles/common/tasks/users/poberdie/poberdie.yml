@@ -2,6 +2,12 @@
 - include_vars: users/poberdie_vars.yml
 
 - block:
+    - name: poberdie | Copy script for decrypting ansible-vault password file
+      copy:
+        src: vault_pass.sh
+        dest: ~/.vault_pass.sh
+        mode: 700
+
     - name: poberdie | Set bash as default shell
       tags: shell,bash
       shell: 'chsh -s $(which bash) poberdie'
