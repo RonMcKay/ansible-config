@@ -6,7 +6,7 @@
       copy:
         src: vault_pass.sh
         dest: ~/.vault_pass.sh
-        mode: 700
+        mode: 0700
 
     - name: poberdie | Set bash as default shell
       tags: shell,bash
