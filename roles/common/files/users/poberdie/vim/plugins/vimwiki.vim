@@ -76,7 +76,19 @@ let wiki_2 = {
     \ 'custom_wiki2html': 'vimwiki_markdown',
     \ 'template_ext': '.tpl'}
 
-let g:vimwiki_list = [wiki_1, wiki_2]
+let wiki_3 = {
+    \ 'path': '~/wiki_papers',
+    \ 'syntax': 'markdown',
+    \ 'ext': '.md',
+    \ 'auto_tags': 1,
+    \ 'auto_toc': 1,
+    \ 'template_path': '~/wiki_papers/html_templates',
+    \ 'template_default': 'default',
+    \ 'path_html': '~/wiki_papers/site_html/',
+    \ 'custom_wiki2html': 'vimwiki_markdown',
+    \ 'template_ext': '.tpl'}
+
+let g:vimwiki_list = [wiki_1, wiki_2, wiki_3]
 let g:vimwiki_global_ext = 0
 let g:vimwiki_folding = 'custom'
 set foldlevel=30
