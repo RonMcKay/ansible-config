@@ -102,7 +102,7 @@ source ~/.config/nvim/plugins/gruvbox.vim
 source ~/.config/nvim/plugins/ripgrep.vim
 source ~/.config/nvim/plugins/fzf.vim
 source ~/.config/nvim/plugins/floaterm.vim
-source ~/.config/nvim/plugins/snippets.vim
+" source ~/.config/nvim/plugins/snippets.vim
 source ~/.config/nvim/plugins/beancount.vim
 
 call plug#end()
