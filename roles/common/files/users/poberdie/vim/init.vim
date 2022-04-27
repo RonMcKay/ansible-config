@@ -96,14 +96,15 @@ endif
 
 silent! call plug#begin(data_dir . '/plugins')
 
-source ~/.config/nvim/plugins/vimwiki.vim
-source ~/.config/nvim/plugins/surround.vim
+source ~/.config/nvim/plugins/beancount.vim
+source ~/.config/nvim/plugins/calendar.vim
+source ~/.config/nvim/plugins/floaterm.vim
+source ~/.config/nvim/plugins/fzf.vim
 source ~/.config/nvim/plugins/gruvbox.vim
 source ~/.config/nvim/plugins/ripgrep.vim
-source ~/.config/nvim/plugins/fzf.vim
-source ~/.config/nvim/plugins/floaterm.vim
 " source ~/.config/nvim/plugins/snippets.vim
-source ~/.config/nvim/plugins/beancount.vim
+source ~/.config/nvim/plugins/surround.vim
+source ~/.config/nvim/plugins/vimwiki.vim
 
 call plug#end()
 doautocmd User PlugLoaded
