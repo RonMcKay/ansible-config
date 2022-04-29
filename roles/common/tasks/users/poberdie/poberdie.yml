@@ -119,6 +119,17 @@
             - { src: 'users/poberdie/vim/after', dest: '/home/poberdie/.vim' }
             - { src: 'users/poberdie/vim/ftplugin', dest: '/home/poberdie/.vim' }
 
+        - name: poberdie | vim/neovim | Copy executable scripts
+          tags: dotfiles
+          copy:
+            src: "{{ item.src }}"
+            dest: "{{ item.dest }}"
+            owner: poberdie
+            group: "{{ user_group if user_group is defined else (getent_passwd.get('poberdie')[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else 'poberdie') }}"
+            mode: 0755
+          loop:
+            - { src: 'users/poberdie/vim/diary_template.py', dest: '/home/poberdie/.config/nvim' }
+
         - name: poberdie | nvim | Update nvim plugins
           shell: nvim +'silent! PlugUpdate' +qa
           changed_when: false

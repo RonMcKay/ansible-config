@@ -42,7 +42,7 @@ augroup vimwikigroup
 
     " When opening a new diary day, run the template script and paste it in
     autocmd BufNewFile ~/wiki_*/diary/*.md silent 0r
-        \ !~/configs/vim/diary_template.py '%'
+        \ !~/.config/nvim/diary_template.py '%'
 
     " Start new diary day in append mode in the header
     autocmd BufNewFile ~/wiki_*/diary/*.md exec 'norm gg' | startinsert!
