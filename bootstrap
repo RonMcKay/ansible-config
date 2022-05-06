@@ -1,22 +1,37 @@
 #!/bin/bash
 
+PUBLIC_KEY=F392B1234F028594D92B2EEFFF9BC62FEBB9B68E
+
 umask 022
 
 # Update repositories
 apt-get update
 
-# Install git and ansible
-apt-get install ansible git python3 python3-pip python3-apt sudo -y
+# Install utilities
+apt-get install ansible git python3 python3-pip python3-apt sudo gpg -y
 
 python3 -m pip install --upgrade pip
 
-if [[ ! -f ~/.vault-password ]]; then
+# Import public key from repository if not yet imported
+if [[ ! $(gpg -k ${PUBLIC_KEY}) ]]; then
+    gpg --keyserver keys.openpgp.org --recv-keys ${PUBLIC_KEY}
+    echo "gpg key has been imported"
+fi
+
+# Enter vault password and encrypt using gpg if not already present
+if [[ ! -f ~/.vault-password.gpg ]]; then
     read -rsp "Please enter the vault-password:" VAULT_PASS < /dev/tty
     echo -e "\n"
 
-    touch ~/.vault-password
-    chmod 600 ~/.vault-password
-    echo "$VAULT_PASS" > ~/.vault-password
+     echo -n "${VAULT_PASS}" | gpg --batch --encrypt -o ~/.vault-password.gpg -r ${PUBLIC_KEY}
+    chmod 600 ~/.vault-password.gpg
 fi
 
-ansible-pull -U https://github.com/ronmckay/ansible-config --checkout main --vault-password-file=~/.vault-password local.yml
+# Download the password decryption script from the repository if not present
+if [[ ! -f ~/.vault_pass.sh ]]; then
+    curl https://raw.githubusercontent.com/RonMcKay/ansible-config/main/roles/common/files/vault_pass.sh > ~/.vault_pass.sh
+    chmod 700 ~/.vault_pass.sh
+fi
+
+# Pull configuration
+ansible-pull -U https://github.com/ronmckay/ansible-config --checkout main --vault-password-file=~/.vault_pass.sh local.yml
