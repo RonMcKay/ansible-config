@@ -33,6 +33,7 @@ export PATH=$PATH:$HOME/.poetry/bin
 export PATH=$PATH:$SYSTEM32
 export PATH=$PATH:"/mnt/c/Users/{{ windows_username | default('Philipp Oberdiek') }}/AppData/Local/Programs/Microsoft VS Code/bin"
 export PATH=$PATH:"/mnt/c/Program Files/Microsoft VS Code/bin"
+export PATH=$PATH:"/mnt/c/Program Files/OpenSCAD"
 {% endif %}
 
 {% if 'patrec' in group_names %}
