@@ -18,8 +18,10 @@ report.next.filter=status=pending and limit=page and area!=i
 ## completed
 report.completed.sort=end-
 ## all
-report.all.columns=id,status.short,uuid.short,start.active,entry.age,end.age,depends.indicator,priority,project,tags.count,recur.indicator,wait.remaining,scheduled.remaining,due,until.remaining,description
+report.all.columns=id,status.short,uuid.short,start.active,entry.age,end.age,person,depends.indicator,priority,project,tags.count,recur.indicator,wait.remaining,scheduled.remaining,due,until.remaining,description
 ## waiting
+report.waiting.columns=id,start.active,entry.age,person,depends.indicator,priority,project,tags,recur.indicator,wait,wait.remaining,scheduled,due,until,description
+report.waiting.labels=ID,A,Age,Person,D,P,Project,Tags,R,Wait,Remaining,Sched,Due,Until,Description
 report.waiting.sort=wait+,due+
 ## inbox report
 report.inbox.context=0
