@@ -12,16 +12,16 @@ include ~/.task/dark-gray-blue-256.theme
 
 # customized reports
 ## next
-report.next.columns=start.age,person,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,id,description,urgency
-report.next.labels=Active,Person,Age,Deps,P,Project,Tag,Recur,S,Due,Until,ID,Description,Urg
+report.next.columns=start.age,person,entry.age,dur,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,id,description,urgency
+report.next.labels=Active,Person,Age,Dur,Deps,P,Project,Tag,Recur,S,Due,Until,ID,Description,Urg
 report.next.filter=status=pending and limit=page and area!=i
 ## completed
 report.completed.sort=end-
 ## all
-report.all.columns=id,status.short,uuid.short,start.active,entry.age,end.age,person,depends.indicator,priority,project,tags.count,recur.indicator,wait.remaining,scheduled.remaining,due,until.remaining,description
+report.all.columns=id,status.short,uuid.short,start.active,entry.age,end.age,person,dur,depends.indicator,priority,project,tags.count,recur.indicator,wait.remaining,scheduled.remaining,due,until.remaining,description
 ## waiting
-report.waiting.columns=id,start.active,entry.age,person,depends.indicator,priority,project,tags,recur.indicator,wait,wait.remaining,scheduled,due,until,description
-report.waiting.labels=ID,A,Age,Person,D,P,Project,Tags,R,Wait,Remaining,Sched,Due,Until,Description
+report.waiting.columns=id,start.active,entry.age,person,dur,depends.indicator,priority,project,tags,recur.indicator,wait,wait.remaining,scheduled,due,until,description
+report.waiting.labels=ID,A,Age,Person,Dur,D,P,Project,Tags,R,Wait,Remaining,Sched,Due,Until,Description
 report.waiting.sort=wait+,due+
 ## inbox report
 report.inbox.context=0
@@ -74,6 +74,9 @@ uda.area.label=Area
 ## person
 uda.person.type=string
 uda.person.label=Person
+## time estimate
+uda.dur.type=duration
+uda.dur.label=Duration
 
 # Urgency coefficients
 urgency.project.coefficient=0
