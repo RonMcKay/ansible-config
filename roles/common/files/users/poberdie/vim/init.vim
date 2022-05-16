@@ -32,7 +32,6 @@ set noswapfile
 set cursorcolumn
 set cursorline
 set colorcolumn=80
-set autochdir
 set autoread
 
 " }}}

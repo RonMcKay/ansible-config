@@ -91,5 +91,6 @@ let wiki_3 = {
 let g:vimwiki_list = [wiki_1, wiki_2, wiki_3]
 let g:vimwiki_global_ext = 0
 let g:vimwiki_folding = 'custom'
+let g:vimwiki_auto_chdir = 1
 set foldlevel=30
 
