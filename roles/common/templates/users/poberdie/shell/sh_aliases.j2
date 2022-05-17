@@ -48,7 +48,11 @@ alias follow='tail -f -n 100'
 alias fcount='ls -1 | wc -l'
 
 # Programs
-alias updateconfig='ansible-pull -K -l $(hostname) --vault-password-file=~/.vault_pass.sh -U https://github.com/ronmckay/ansible-config local.yml'
+alias updateconfig='
+if [[ ! -f ~/.vault-password.gpg ]]; then
+    ~/.retrieve_vault_password.sh
+fi
+ansible-pull -K -l $(hostname) --vault-password-file=~/.vault_pass.sh -U https://github.com/ronmckay/ansible-config local.yml'
 
 if [ -x "$(command -v nvim)" ]; then
     alias vim='nvim'
