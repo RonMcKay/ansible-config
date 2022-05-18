@@ -9,4 +9,4 @@
 # Apply user configuration
 # Only apply my user configuration if the ansible_user matches with 'poberdie' or it is a private machine where I have rights to create my own users
 - include: users/poberdie/poberdie.yml
-  when: getent_passwd.poberdie != None
+  when: getent_passwd is defined and getent_passwd.poberdie != None
