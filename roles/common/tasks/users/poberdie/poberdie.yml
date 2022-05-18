@@ -156,6 +156,6 @@
 
       tags: utilities,vim,nvim
 
-  when: ansible_distribution in ["Debian", "Ubuntu"]
+  when: ansible_distribution in ["Debian", "Ubuntu", "OtherLinux"]
   become_user: poberdie
   become: true

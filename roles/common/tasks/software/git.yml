@@ -7,3 +7,9 @@
     update_cache: yes
   when: ansible_distribution in ["Debian", "Ubuntu"]
   tags: utilities,git
+
+- name: Install git
+  become: no
+  command: pkg install git
+  when: ansible_distribution in ["OtherLinux"]
+  tags: utilities,git

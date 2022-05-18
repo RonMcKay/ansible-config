@@ -7,3 +7,9 @@
     state: latest
     update_cache: yes
   when: ansible_distribution in ["Debian", "Ubuntu"]
+
+- name: Install vim
+  become: no
+  tags: utilities,vim
+  command: pkg install vim
+  when: ansible_distribution in ["OtherLinux"]
