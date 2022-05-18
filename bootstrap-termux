@@ -1,0 +1,45 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+PUBLIC_KEY=F392B1234F028594D92B2EEFFF9BC62FEBB9B68E
+
+yes | pkg upgrade && \
+yes | pkg install \
+    python \
+    rust \
+    curl \
+    wget \
+    okc-agents \
+    gnupg
+
+# Install the latest Python package manager.
+pip install --upgrade pip
+
+# Install python packages
+# see https://gist.github.com/kuttor/5540b0b7ee18ea62283068b03813693e?permalink_comment_id=4054735#gistcomment-4054735
+pip install wheel
+export CARGO_BUILD_TARGET=aarch64-linux-android
+pip install cryptography
+pip install ansible
+
+# Import public key from repository if not yet imported
+if [[ ! $(gpg -k ${PUBLIC_KEY}) ]]; then
+    gpg --keyserver keys.openpgp.org --recv-keys ${PUBLIC_KEY}
+    echo "gpg key has been imported"
+fi
+
+# Enter vault password and encrypt using gpg if not already present
+if [[ ! -f ~/.vault-password.gpg ]]; then
+    read -rsp "Please enter the vault-password:" VAULT_PASS < /dev/tty
+    echo -e "\n"
+
+     echo -n "${VAULT_PASS}" | gpg --batch --encrypt -o ~/.vault-password.gpg -r ${PUBLIC_KEY}
+    chmod 600 ~/.vault-password.gpg
+fi
+
+# Download the password decryption script from the repository if not present
+if [[ ! -f ~/.vault_pass.sh ]]; then
+    curl https://raw.githubusercontent.com/RonMcKay/ansible-config/termux/roles/common/files/vault_pass.sh > ~/.vault_pass.sh
+    chmod 700 ~/.vault_pass.sh
+fi
+
+ansible-pull --vault-password-file=~/.vault_pass.sh -U https://github.com/ronmckay/ansible-config -C termux local.yml
