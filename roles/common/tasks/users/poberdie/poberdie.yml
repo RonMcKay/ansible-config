@@ -104,7 +104,15 @@
             - '/home/poberdie/.vim/after/ftplugin'
             - '/home/poberdie/.vim/autoload'
 
-        - name: poberdie | vim/neovim | Copy vimrc, init.vim and all config directories
+        - name: poberdie | vim/neovim | Copy init.vim from template
+          template:
+            src: users/poberdie/init.vim.j2
+            dest: /home/poberdie/.config/nvim/init.vim
+            mode: 0644
+            owner: poberdie
+            group: "{{ user_group if user_group is defined else (getent_passwd.get('poberdie')[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else 'poberdie') }}"
+
+        - name: poberdie | vim/neovim | Copy vim config files
           tags: dotfiles
           copy:
             src: "{{ item.src }}"
@@ -113,7 +121,6 @@
             group: "{{ user_group if user_group is defined else (getent_passwd.get('poberdie')[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else 'poberdie') }}"
             mode: 0644
           loop:
-            - { src: 'users/poberdie/vim/init.vim', dest: '/home/poberdie/.config/nvim/init.vim' }
             - { src: 'users/poberdie/vim/after', dest: '/home/poberdie/.config/nvim' }
             - { src: 'users/poberdie/vim/ftplugin', dest: '/home/poberdie/.config/nvim' }
             - { src: 'users/poberdie/vim/plugins', dest: '/home/poberdie/.config/nvim' }

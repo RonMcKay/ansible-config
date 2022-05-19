@@ -1,3 +1,5 @@
+" {{ ansible_managed }}
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "
 "               ██╗   ██╗██╗███╗   ███╗██████╗  ██████╗
@@ -9,7 +11,7 @@
 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" General Settings --------------------------------------------------------- {{{
+" General Settings --------------------------------------------------------- {{ '{{{' }}
 
 set expandtab
 set shiftwidth=4
@@ -34,9 +36,9 @@ set cursorline
 set colorcolumn=80
 set autoread
 
-" }}}
+" {{ '}}}' }}
 
-" Key Mappings ------------------------------------------------------------- {{{
+" Key Mappings ------------------------------------------------------------- {{ '{{{' }}
 
 " Map leader to space
 nnoremap <SPACE> <Nop>
@@ -69,7 +71,11 @@ nnoremap <C-H> <C-W><C-H>
 nnoremap <C-t> :tabnew<CR>
 
 " Open file in default viewer
+{% if in_wsl %}
+nmap <leader>x :!wslview %<CR><CR>
+{% else %}
 nmap <leader>x :!xdg-open %<CR><CR>
+{% endif %}
 
 " Map omnicomplete to Ctrl-k
 inoremap <C-k> <C-x><C-o>
@@ -82,9 +88,9 @@ nnoremap <F9> zo]z
 inoremap <F10> <C-O>za
 nnoremap <F10> za
 
-" }}}
+" {{ '}}}' }}
 
-" PLUGINS ------------------------------------------------------------------ {{{
+" PLUGINS ------------------------------------------------------------------ {{ '{{{' }}
 
 " Automatically install vim-plug
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
@@ -109,9 +115,9 @@ source ~/.config/nvim/plugins/vimwiki.vim
 call plug#end()
 doautocmd User PlugLoaded
 
-" }}}
+" {{ '}}}' }}
 
-" AUTO-COMMANDS ------------------------------------------------------------ {{{
+" AUTO-COMMANDS ------------------------------------------------------------ {{ '{{{' }}
 
 augroup filetype_vim
     autocmd!
@@ -151,9 +157,9 @@ if executable(s:clip)
     augroup END
 endif
 
-" }}}
+" {{ '}}}' }}
 
-" Scripting ------------------------------------------------------------ {{{
+" Scripting ------------------------------------------------------------ {{ '{{{' }}
 
 fun! TrimWhitespace()
     if match(expand('%'), ".*\.md") == -1
@@ -179,4 +185,4 @@ function! MyDeleteView()
     echo "Deleted: ".path
 endfunction
 
-" }}}
+" {{ '}}}' }}
