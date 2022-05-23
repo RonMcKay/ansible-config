@@ -74,14 +74,7 @@ alias stopomniboard='pkill -f "node .*/bin/omniboard"'
 
 # Python
 alias python='nice python3'
-alias vpython='
-if [[ -f "./venv/bin/python" ]]; then
-    nice ./venv/bin/python
-elif [[ -f "./.venv/bin/python" ]]; then
-    nice ./.venv/bin/python
-else
-    echo "No virtual environment found!"
-fi'
+alias vpython='./.venv/bin/python'
 alias venv='
 if [[ -f "./venv/bin/activate" ]]; then
     source ./venv/bin/activate
