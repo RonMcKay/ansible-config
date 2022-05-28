@@ -22,13 +22,17 @@
   become_user: "{{ config_user }}"
 
 - block:
-    - name: "tw | Ensure '$HOME/.task' exists"
+    - name: "tw | Ensure '$HOME/.task' and '$HOME/.task/hooks' exists and have correct permissions"
       file:
-        path: "$HOME/.task"
-        state: directory
+        path: "{{ item.path }}"
+        state: "{{ item.state }}"
         mode: 0700
         owner: "{{ config_user }}"
         group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
+      loop:
+        - { path: "$HOME/.task/hooks", state: "directory" }
+        - { path: "$HOME/.task", state: "touch" }
+        - { path: "$HOME/.task/hooks", state: "touch" }
 
     - name: "tw | Copy taskwarrior files"
       copy:
@@ -41,7 +45,6 @@
         - { src: "taskwarrior/ca.cert.pem", dest: "$HOME/.task/ca.cert.pem" }
         - { src: "taskwarrior/philipp_oberdiek.cert.pem", dest: "$HOME/.task/philipp_oberdiek.cert.pem" }
         - { src: "taskwarrior/philipp_oberdiek.key.pem", dest: "$HOME/.task/philipp_oberdiek.key.pem" }
-        - { src: "taskwarrior/hooks", dest: "$HOME/.task/hooks" }
         - { src: "taskwarrior/dark-gray-blue-256.theme", dest: "$HOME/.task/dark-gray-blue-256.theme" }
 
     - name: "tw | Copy .taskrc template"
@@ -56,11 +59,30 @@
       command: "task sync"
       changed_when: false
 
-    - name: "tw | Install python-dateutil for taskwarrior hooks"
+    - name: "tw | Install tasklib for hooks"
       pip:
-        name: python-dateutil
-        state: latest
+        name: git+https://github.com/GothenburgBitFactory/tasklib.git@develop
         umask: '0022'
+
+    - name: "tw | Install taskpirate"
+      get_url:
+        url: "{{ item.url }}"
+        dest: "{{ item.dest }}"
+        owner: "{{ config_user }}"
+        group: "{{ user_group if user_group is defined else (getent_passwd.get(config_user)[2] if getent_passwd is defined and getent_passwd.get('poberdie', '') != '' else config_user) }}"
+        mode: 0744
+      loop:
+        - { url: "https://raw.githubusercontent.com/tbabej/taskpirate/master/on-add-pirate", dest: "$HOME/.task/hooks/on-add-pirate" }
+        - { url: "https://raw.githubusercontent.com/tbabej/taskpirate/master/on-modify-pirate", dest: "$HOME/.task/hooks/on-modify-pirate" }
+
+    - name: "tw | Install hooks"
+      git:
+        repo: "{{ item.repo }}"
+        dest: "{{ item.dest }}"
+        force: yes
+      loop:
+        - { repo: "https://github.com/tbabej/task.shift-recurrence.git", dest: "$HOME/.task/hooks/shift-recurrence" }
+        - { repo: "https://github.com/RonMcKay/task.default-date-time.git", dest: "$HOME/.task/hooks/default-date-time" }
 
   become_user: "{{ config_user }}"
   become: true
