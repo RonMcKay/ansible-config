@@ -64,6 +64,16 @@
         name: git+https://github.com/GothenburgBitFactory/tasklib.git@develop
         umask: '0022'
 
+    - name: "tw | Remove old hooks"
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - "$HOME/.task/hooks/hooks"
+        - "$HOME/.task/hooks/on-add.hooks"
+        - "$HOME/.task/hooks/on-modify.hooks"
+        - "$HOME/.task/hooks/hook_functions"
+
     - name: "tw | Install taskpirate"
       get_url:
         url: "{{ item.url }}"
