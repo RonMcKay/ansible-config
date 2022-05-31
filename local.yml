@@ -28,3 +28,21 @@
       - software/syncthing.yml
       - software/taskwarrior.yml
       - software/vit.yml
+
+  - name: Configure taskwarrior for user taskwarrior
+    include_role:
+      name: workstation
+      tasks_from: config/taskwarrior-config.yml
+    vars:
+      config_user: taskwarrior
+      user_group: taskwarrior
+    tags: tw
+
+  - name: Configure taskwarrior for user poberdie
+    include_role:
+      name: workstation
+      tasks_from: config/taskwarrior-config.yml
+    vars:
+      config_user: poberdie
+      user_group: poberdie
+    tags: tw

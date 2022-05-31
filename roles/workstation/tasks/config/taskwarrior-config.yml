@@ -1,5 +1,6 @@
 ---
 - include_vars: taskwarrior_vars.yml
+  tags: tw
 
 - block:
     - name: "vit | Ensure '.vit' folder exists"
@@ -33,6 +34,7 @@
         - { path: "$HOME/.task/hooks", state: "directory" }
         - { path: "$HOME/.task", state: "touch" }
         - { path: "$HOME/.task/hooks", state: "touch" }
+      changed_when: false
 
     - name: "tw | Copy taskwarrior files"
       copy:
