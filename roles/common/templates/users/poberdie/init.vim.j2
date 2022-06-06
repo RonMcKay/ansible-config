@@ -72,7 +72,7 @@ nnoremap <C-t> :tabnew<CR>
 
 " Open file in default viewer
 {% if in_wsl %}
-nmap <leader>x :!wslview %<CR><CR>
+nmap <leader>x :!wslview $(wslpath -w %)<CR><CR>
 {% else %}
 nmap <leader>x :!xdg-open %<CR><CR>
 {% endif %}
