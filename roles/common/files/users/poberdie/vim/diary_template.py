@@ -3,7 +3,7 @@ import sys
 import datetime
 from os.path import basename, splitext
 
-WEEKLY_REVIEW_WEEKDAY = 4  # Friday
+WEEKLY_REVIEW_WEEKDAY = None
 
 template = "# {date} | "
 template_weekly_review = """# {date} | Weekly Review
@@ -35,7 +35,7 @@ date = (datetime.date.today() if len(sys.argv) < 2
         # Expecting filename in YYYY-MM-DD.foo format
         else datetime.datetime.strptime(splitext(basename(sys.argv[1]))[0], "%Y-%m-%d").date())
 
-if date.weekday() == WEEKLY_REVIEW_WEEKDAY:
+if WEEKLY_REVIEW_WEEKDAY is not None and date.weekday() == WEEKLY_REVIEW_WEEKDAY:
     print(template_weekly_review.format(date=date))
 else:
     print(template.format(date=date))
